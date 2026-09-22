@@ -22,7 +22,10 @@ impl RecoveryPolicy {
         if threshold == 0 || total_factors == 0 || threshold > total_factors {
             return Err(RecoveryError::InvalidPolicy);
         }
-        Ok(Self { threshold, total_factors })
+        Ok(Self {
+            threshold,
+            total_factors,
+        })
     }
 }
 
@@ -34,7 +37,10 @@ pub struct RecoverySession {
 
 impl RecoverySession {
     pub fn new(policy: RecoveryPolicy) -> Self {
-        Self { policy, approvals: BTreeSet::new() }
+        Self {
+            policy,
+            approvals: BTreeSet::new(),
+        }
     }
 
     pub fn approve(&mut self, factor_id: impl Into<String>) -> Result<(), RecoveryError> {
