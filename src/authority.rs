@@ -72,7 +72,8 @@ impl TicketVerifier {
         validate_source(ticket.claims.kind, ticket.claims.source)?;
         let mut mac = HmacSha3_512::new_from_slice(&self.key).expect("fixed-size HMAC key");
         mac.update(&claims_bytes(&ticket.claims));
-        mac.verify_slice(&ticket.mac).map_err(|_| TicketError::InvalidMac)
+        mac.verify_slice(&ticket.mac)
+            .map_err(|_| TicketError::InvalidMac)
     }
 }
 
