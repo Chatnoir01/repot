@@ -1,0 +1,19 @@
+[package]
+name = "secure-core-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+secure-core = { path = ".." }
+
+[[bin]]
+name = "policy_request"
+path = "fuzz_targets/policy_request.rs"
+test = false
+doc = false
+bench = false
