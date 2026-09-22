@@ -3,6 +3,7 @@
 pub mod api;
 pub mod attestation;
 pub mod audit;
+pub mod authority;
 pub mod evidence;
 pub mod isolation;
 pub mod keys;
@@ -18,7 +19,8 @@ pub mod state;
 pub mod storage;
 pub mod transparency;
 
-pub use api::{CoreError, SecureCore};
+pub use api::{CoreError, ExternalRequest, SecureCore};
+pub use authority::{AuthTicket, TicketClaims, TicketError, TicketIssuer, TicketKind, TicketVerifier};
 pub use evidence::{Evidence, EvidenceError, EvidenceSource};
 pub use policy::{Decision, Operation, PolicyEngine, Request};
 pub use state::{SecurityState, TransitionError};
