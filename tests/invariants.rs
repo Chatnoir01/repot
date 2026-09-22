@@ -1,35 +1,46 @@
-use secure_core::*;
+use secure_core::keys::{KeyDescriptor, KeyOrigin, KeyPurpose, KeyStatus};
 use secure_core::rate_limit::FailureTracker;
+use secure_core::*;
 
-fn ev(counter: u64, source: Option<EvidenceSource>) -> Evidence {
-    Evidence {
-        nonce: [counter as u8; 32],
-        counter,
-        policy_version: 1,
-        auth_source: source,
-        recovery_source: None,
-    }
+fn core(policy_version: u64) -> SecureCore {
+    let mut core = SecureCore::new(policy_version);
+    core.keys_mut()
+        .register(KeyDescriptor {
+            id: "test-key".into(),
+            purpose: KeyPurpose::Authorization,
+            origin: KeyOrigin::Software,
+            status: KeyStatus::Active,
+            exportable: false,
+            algorithm: "test-only".into(),
+        })
+        .unwrap();
+    core
 }
 
-fn req(operation: Operation, state: SecurityState, evidence: Evidence) -> Request {
-    Request {
+fn request(operation: Operation, state: SecurityState, counter: u64, policy_version: u64) -> ExternalRequest {
+    ExternalRequest {
         operation,
         state,
         key_id: Some("test-key".into()),
         caller: "invariant-test".into(),
         context: "test".into(),
-        evidence,
+        nonce: [counter as u8; 32],
+        counter,
+        policy_version,
+        auth_ticket: None,
+        recovery_ticket: None,
     }
 }
 
 #[test]
 fn i001_lockdown_denies_identity_signature() {
-    let mut engine = PolicyEngine::new(1);
-    let d = engine
-        .authorize(req(
+    let mut core = core(1);
+    let d = core
+        .authorize_external(request(
             Operation::IdentitySign,
             SecurityState::Lockdown,
-            ev(1, Some(EvidenceSource::HardwareUserAuth)),
+            1,
+            1,
         ))
         .unwrap();
     assert_eq!(d, Decision::Deny);
@@ -45,33 +56,34 @@ fn i002_quarantine_cannot_deescalate_from_host_alone() {
 
 #[test]
 fn i003_stale_counter_is_rejected() {
-    let mut engine = PolicyEngine::new(1);
-    engine
-        .authorize(req(
-            Operation::Encrypt,
-            SecurityState::Normal,
-            ev(2, None),
-        ))
-        .unwrap();
-    let r = engine.authorize(req(
+    let mut core = core(1);
+    core.authorize_external(request(
         Operation::Encrypt,
         SecurityState::Normal,
-        ev(1, None),
+        2,
+        1,
+    ))
+    .unwrap();
+
+    let r = core.authorize_external(request(
+        Operation::Encrypt,
+        SecurityState::Normal,
+        1,
+        1,
     ));
-    assert_eq!(r, Err(EvidenceError::StaleCounter));
+    assert_eq!(r, Err(CoreError::Evidence(EvidenceError::StaleCounter)));
 }
 
 #[test]
 fn i004_policy_rollback_is_rejected() {
-    let mut engine = PolicyEngine::new(2);
-    let mut evidence = ev(1, Some(EvidenceSource::HardwareUserAuth));
-    evidence.policy_version = 1;
-    let r = engine.authorize(req(
+    let mut core = core(2);
+    let r = core.authorize_external(request(
         Operation::Encrypt,
         SecurityState::Normal,
-        evidence,
+        1,
+        1,
     ));
-    assert_eq!(r, Err(EvidenceError::PolicyRollback));
+    assert_eq!(r, Err(CoreError::Evidence(EvidenceError::PolicyRollback)));
 }
 
 #[test]
@@ -95,12 +107,13 @@ fn i008_export_is_denied_in_every_state() {
     .into_iter()
     .enumerate()
     {
-        let mut engine = PolicyEngine::new(1);
-        let d = engine
-            .authorize(req(
+        let mut core = core(1);
+        let d = core
+            .authorize_external(request(
                 Operation::Export,
                 state,
-                ev((i + 1) as u64, Some(EvidenceSource::HardwareUserAuth)),
+                (i + 1) as u64,
+                1,
             ))
             .unwrap();
         assert_eq!(d, Decision::Deny);
