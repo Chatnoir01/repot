@@ -1,6 +1,4 @@
-use secure_core::transport::{
-    decode_request, encode_request, TransportError, MAX_PAYLOAD_BYTES,
-};
+use secure_core::transport::{decode_request, encode_request, TransportError, MAX_PAYLOAD_BYTES};
 use secure_core::{ExternalRequest, Operation, SecurityState};
 
 fn request() -> ExternalRequest {
@@ -38,20 +36,14 @@ fn short_frame_is_rejected() {
 fn declared_length_mismatch_is_rejected() {
     let mut frame = encode_request(&request()).unwrap();
     frame.push(0);
-    assert_eq!(
-        decode_request(&frame),
-        Err(TransportError::LengthMismatch)
-    );
+    assert_eq!(decode_request(&frame), Err(TransportError::LengthMismatch));
 }
 
 #[test]
 fn oversized_declared_payload_is_rejected_before_deserialization() {
     let declared = u32::try_from(MAX_PAYLOAD_BYTES + 1).unwrap();
     let frame = declared.to_be_bytes();
-    assert_eq!(
-        decode_request(&frame),
-        Err(TransportError::PayloadTooLarge)
-    );
+    assert_eq!(decode_request(&frame), Err(TransportError::PayloadTooLarge));
 }
 
 #[test]
