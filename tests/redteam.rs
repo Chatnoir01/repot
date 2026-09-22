@@ -53,11 +53,7 @@ fn auth_ticket(request: &ExternalRequest, source: EvidenceSource) -> AuthTicket 
 fn hostile_host_without_ticket_cannot_get_identity_signature() {
     let mut core = core();
     let d = core
-        .authorize_external(request(
-            Operation::IdentitySign,
-            SecurityState::Normal,
-            1,
-        ))
+        .authorize_external(request(Operation::IdentitySign, SecurityState::Normal, 1))
         .unwrap();
     assert_eq!(d, Decision::ReauthRequired);
 }
