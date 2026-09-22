@@ -1,5 +1,4 @@
-use crate::policy::{Decision, Request};
-use crate::EvidenceError;
+use crate::{CoreError, Decision, ExternalRequest};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum IsolationAssurance {
@@ -10,7 +9,7 @@ pub enum IsolationAssurance {
 
 pub trait IsolatedPolicyBoundary {
     fn assurance(&self) -> IsolationAssurance;
-    fn authorize(&mut self, request: Request) -> Result<Decision, EvidenceError>;
+    fn authorize_external(&mut self, request: ExternalRequest) -> Result<Decision, CoreError>;
 }
 
 // Actual AVF/pKVM transport belongs in a platform adapter and must only report
