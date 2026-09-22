@@ -1,6 +1,7 @@
 #![no_main]
 
 use libfuzzer_sys::fuzz_target;
+use secure_core::keys::{KeyDescriptor, KeyOrigin, KeyPurpose, KeyStatus};
 use secure_core::*;
 
 fuzz_target!(|data: &[u8]| {
@@ -30,27 +31,26 @@ fuzz_target!(|data: &[u8]| {
         Operation::Admin,
     ];
 
-    let source = match data[2] % 5 {
-        0 => Some(EvidenceSource::Host),
-        1 => Some(EvidenceSource::HardwareUserAuth),
-        2 => Some(EvidenceSource::Attestation),
-        3 => Some(EvidenceSource::RecoveryQuorum),
-        _ => Some(EvidenceSource::IsolatedCore),
-    };
+    let mut core = SecureCore::new(1);
+    let _ = core.keys_mut().register(KeyDescriptor {
+        id: "fuzz".into(),
+        purpose: KeyPurpose::Authorization,
+        origin: KeyOrigin::Software,
+        status: KeyStatus::Active,
+        exportable: false,
+        algorithm: "robustness-only".into(),
+    });
 
-    let mut engine = PolicyEngine::new(1);
-    let _ = engine.authorize(Request {
+    let _ = core.authorize_external(ExternalRequest {
         operation: operations[(data[1] as usize) % operations.len()],
         state: states[(data[0] as usize) % states.len()],
         key_id: Some("fuzz".into()),
-        caller: "fuzzer".into(),
-        context: "malformed-boundary".into(),
-        evidence: Evidence {
-            nonce: [data[3]; 32],
-            counter: 1,
-            policy_version: 1,
-            auth_source: source,
-            recovery_source: None,
-        },
+        caller: "robustness-harness".into(),
+        context: "public-boundary".into(),
+        nonce: [data[3]; 32],
+        counter: u64::from(data[2]).saturating_add(1),
+        policy_version: 1,
+        auth_ticket: None,
+        recovery_ticket: None,
     });
 });
