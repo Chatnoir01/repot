@@ -101,7 +101,10 @@ impl SecureCore {
         let Some(ticket) = ticket else {
             return Ok(None);
         };
-        let verifier = self.verifier.as_ref().ok_or(CoreError::AuthorityUnavailable)?;
+        let verifier = self
+            .verifier
+            .as_ref()
+            .ok_or(CoreError::AuthorityUnavailable)?;
         verifier.verify(ticket)?;
 
         if ticket.claims.kind != expected_kind
