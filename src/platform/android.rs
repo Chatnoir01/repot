@@ -15,7 +15,7 @@ pub struct AndroidCapabilityProbe {
 pub fn detect_from_probe(probe: AndroidCapabilityProbe) -> PlatformCapabilities {
     PlatformCapabilities {
         hardware_backed_keystore: probe.hardware_backed_keystore,
-        strongbox_like: probe.strongbox,
+        dedicated_secure_hardware: probe.strongbox,
         secure_user_auth: probe.secure_user_auth,
         remote_attestation: probe.remote_attestation,
         protected_vm: probe.protected_vm,
