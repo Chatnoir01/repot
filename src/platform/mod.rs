@@ -1,4 +1,5 @@
 pub mod android;
+pub mod ios;
 
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeSet;
@@ -25,7 +26,7 @@ pub enum CapabilityAssurance {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PlatformCapabilities {
     pub hardware_backed_keystore: bool,
-    pub strongbox_like: bool,
+    pub dedicated_secure_hardware: bool,
     pub secure_user_auth: bool,
     pub remote_attestation: bool,
     pub protected_vm: bool,
