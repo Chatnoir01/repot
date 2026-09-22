@@ -20,7 +20,9 @@ pub mod storage;
 pub mod transparency;
 
 pub use api::{CoreError, ExternalRequest, SecureCore};
-pub use authority::{AuthTicket, TicketClaims, TicketError, TicketIssuer, TicketKind, TicketVerifier};
+pub use authority::{
+    AuthTicket, TicketClaims, TicketError, TicketIssuer, TicketKind, TicketVerifier,
+};
 pub(crate) use evidence::Evidence;
 pub use evidence::{EvidenceError, EvidenceSource};
 pub use policy::{Decision, Operation};
