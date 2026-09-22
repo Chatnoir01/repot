@@ -18,6 +18,7 @@ pub mod relay;
 pub mod state;
 pub mod storage;
 pub mod transparency;
+pub mod transport;
 
 pub use api::{CoreError, ExternalRequest, SecureCore};
 pub use authority::{
