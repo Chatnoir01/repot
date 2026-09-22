@@ -13,7 +13,10 @@ fn storage_round_trip_and_tamper_rejection() {
     let nonce = [9u8; 24];
     let aad = b"vault:v1";
     let ciphertext = storage::seal(&key, &nonce, b"secret", aad).unwrap();
-    assert_eq!(storage::open(&key, &nonce, &ciphertext, aad).unwrap(), b"secret");
+    assert_eq!(
+        storage::open(&key, &nonce, &ciphertext, aad).unwrap(),
+        b"secret"
+    );
 
     let mut tampered = ciphertext;
     tampered[0] ^= 1;
