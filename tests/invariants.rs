@@ -17,7 +17,12 @@ fn core(policy_version: u64) -> SecureCore {
     core
 }
 
-fn request(operation: Operation, state: SecurityState, counter: u64, policy_version: u64) -> ExternalRequest {
+fn request(
+    operation: Operation,
+    state: SecurityState,
+    counter: u64,
+    policy_version: u64,
+) -> ExternalRequest {
     ExternalRequest {
         operation,
         state,
@@ -57,32 +62,17 @@ fn i002_quarantine_cannot_deescalate_from_host_alone() {
 #[test]
 fn i003_stale_counter_is_rejected() {
     let mut core = core(1);
-    core.authorize_external(request(
-        Operation::Encrypt,
-        SecurityState::Normal,
-        2,
-        1,
-    ))
-    .unwrap();
+    core.authorize_external(request(Operation::Encrypt, SecurityState::Normal, 2, 1))
+        .unwrap();
 
-    let r = core.authorize_external(request(
-        Operation::Encrypt,
-        SecurityState::Normal,
-        1,
-        1,
-    ));
+    let r = core.authorize_external(request(Operation::Encrypt, SecurityState::Normal, 1, 1));
     assert_eq!(r, Err(CoreError::Evidence(EvidenceError::StaleCounter)));
 }
 
 #[test]
 fn i004_policy_rollback_is_rejected() {
     let mut core = core(2);
-    let r = core.authorize_external(request(
-        Operation::Encrypt,
-        SecurityState::Normal,
-        1,
-        1,
-    ));
+    let r = core.authorize_external(request(Operation::Encrypt, SecurityState::Normal, 1, 1));
     assert_eq!(r, Err(CoreError::Evidence(EvidenceError::PolicyRollback)));
 }
 
@@ -109,12 +99,7 @@ fn i008_export_is_denied_in_every_state() {
     {
         let mut core = core(1);
         let d = core
-            .authorize_external(request(
-                Operation::Export,
-                state,
-                (i + 1) as u64,
-                1,
-            ))
+            .authorize_external(request(Operation::Export, state, (i + 1) as u64, 1))
             .unwrap();
         assert_eq!(d, Decision::Deny);
     }
