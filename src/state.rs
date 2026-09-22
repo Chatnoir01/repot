@@ -17,7 +17,11 @@ pub enum TransitionError {
 }
 
 impl SecurityState {
-    pub fn transition(self, target: Self, recovery_authorized: bool) -> Result<Self, TransitionError> {
+    pub fn transition(
+        self,
+        target: Self,
+        recovery_authorized: bool,
+    ) -> Result<Self, TransitionError> {
         if target < self && !recovery_authorized {
             return Err(TransitionError::UnauthorizedDeescalation);
         }
