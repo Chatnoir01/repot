@@ -15,10 +15,19 @@ pub struct Checkpoint {
     pub root_hash: String,
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct TransparencyLog {
     entries: Vec<TransparencyEntry>,
     root: [u8; 64],
+}
+
+impl Default for TransparencyLog {
+    fn default() -> Self {
+        Self {
+            entries: Vec::new(),
+            root: [0u8; 64],
+        }
+    }
 }
 
 impl TransparencyLog {
