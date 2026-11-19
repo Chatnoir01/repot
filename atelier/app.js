@@ -76,7 +76,7 @@ function preview(){
  // This iframe has sandbox="" and an internal CSP: no script or external network.
  const html=$("html-editor").value.slice(0,25000);
  const css=$("css-editor").value.slice(0,25000).replace(/<\/style/gi,"<\\/style");
- const csp='<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src data:; font-src data:; form-action &#39;none&#39;; base-uri &#39;none&#39;">';
+ const csp=`<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:; form-action 'none'; base-uri 'none'">`;
  $("web-preview").srcdoc='<!doctype html><html lang="fr"><head><meta charset="utf-8">'+csp+'<meta name="viewport" content="width=device-width,initial-scale=1"><style>'+css+'</style></head><body>'+html+'</body></html>';
 }
 function render(){
