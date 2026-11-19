@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Atelier interactif de codage pour débutants : algorithmique, langage C et HTML/CSS, exercices, corrigés et progression locale.">
+<meta name="theme-color" content="#0a100c">
+<title>DEV/LAB — Apprends à coder en pratiquant</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css">
+<script type="module" src="app.js"></script>
+</head>
+<body>
+<a class="skip" href="#atelier">Passer à l’atelier</a>
+<header class="site-header"><div class="shell header-inner">
+<a class="brand" href="../index.html"><span class="brand-symbol" aria-hidden="true">⌘</span><span>DEV<span class="lime">/</span>LAB</span><small>ATELIER</small></a>
+<nav aria-label="Navigation principale"><a href="#parcours">Parcours</a><a href="#atelier">Le studio</a><a href="#methode">Méthode</a></nav>
+<a class="back-link" href="../index.html">← Portfolio</a>
+</div></header>
+<main>
+<section class="hero"><div class="shell">
+<div class="hero-strip"><span><i class="dot"></i>APPRENDRE EN CONSTRUISANT</span><span>ÉDITION 001 — 2026</span></div>
+<div class="hero-grid">
+<div class="hero-text"><div class="eyebrow">LE CODE EST UN TERRAIN D’EXPLORATION</div>
+<h1>TON CODE.<br><span class="outline-text">TES RÈGLES.</span><br><span class="lime">TON DÉCLIC.</span></h1>
+<p>Des vrais exercices, des erreurs à comprendre et des idées à construire. Commence par les bases et progresse à ton rythme, directement dans ton navigateur.</p>
+<div class="hero-cta"><a class="btn btn-primary" href="#atelier">Commencer à coder <span>↗</span></a><a class="btn btn-ghost" href="#parcours">Choisir un parcours ↓</a></div>
+<div class="hero-facts"><span>01 — COMPRENDRE</span><span>02 — EXPÉRIMENTER</span><span>03 — PROGRESSER</span></div></div>
+<div class="terminal-art" aria-label="Illustration d’un programme pédagogique">
+<div class="term-top"><span>● ● ●</span><strong>EXERCICE / 001</strong><span>✳</span></div>
+<div class="term-main"><div class="term-file">premier_programme.algo <span>ALGORITHMIQUE</span></div>
+<pre><span class="line-no">01</span> nom = <span class="string">"Alex"</span>
+<span class="line-no">02</span> <span class="keyword">afficher</span> <span class="string">"Bonjour "</span> + nom
+<span class="line-no">03</span> <span class="comment">// À ton tour !</span></pre>
+<div class="term-output"><small>↳ RÉSULTAT</small><strong>Bonjour Alex<span class="caret">_</span></strong></div>
+<div class="term-bottom"><span>● AUCUNE INSTALLATION</span><span>100% DANS LE NAVIGATEUR</span></div></div></div>
+</div><div class="hero-foot"><span>DU PREMIER ALGORITHME AU PREMIER PROJET.</span><span>↓ DÉFILER</span></div>
+</div></section>
+<div class="belt"><div class="shell"><span>ALGORITHMIQUE</span><b>✳</b><span>LANGAGE C</span><b>✳</b><span>HTML & CSS</span><b>✳</b><span>EXERCICES INTERACTIFS</span></div></div>
+<section class="section" id="parcours"><div class="shell">
+<div class="section-heading"><div><span class="eyebrow">01 / CHOISIS TON PARCOURS</span><h2>TROIS PARCOURS.<br><span class="lime">UNE MÉTHODE.</span></h2></div><p>Un objectif clair, une pratique immédiate, une correction pour comprendre. Pas besoin de savoir coder avant de commencer.</p></div>
+<div class="cards">
+<button class="path-card featured" data-start="algo" type="button"><span class="card-kicker">PARCOURS 01 / INTERACTIF</span><span class="card-glyph">{ }</span><h3>Penser comme un programmeur.</h3><p>Variables, conditions, boucles et mini-projets : écris et exécute ton pseudocode.</p><span class="card-bottom">12 DÉFIS <b>COMMENCER ↗</b></span></button>
+<button class="path-card" data-start="c" type="button"><span class="card-kicker">PARCOURS 02 / QUIZ</span><span class="card-glyph">C✳</span><h3>Découvrir le langage C.</h3><p>Lis du vrai code C et vérifie tes connaissances avec des questions corrigées.</p><span class="card-bottom">6 LEÇONS <b>EXPLORER ↗</b></span></button>
+<button class="path-card" data-start="web" type="button"><span class="card-kicker">PARCOURS 03 / CRÉATIF</span><span class="card-glyph">&lt;/&gt;</span><h3>Créer ta première page.</h3><p>Modifie HTML et CSS, observe le résultat dans un aperçu sécurisé.</p><span class="card-bottom">3 ATELIERS <b>CRÉER ↗</b></span></button>
+</div></div></section>
+<section class="section studio-section" id="atelier" aria-labelledby="studio-title"><div class="shell">
+<div class="studio-heading"><div><span class="eyebrow">02 / LE STUDIO DE CODE</span><h2 id="studio-title">À TOI DE CODER<span class="lime">.</span></h2><p>Lis, essaie, corrige et recommence : ici tu es aux commandes.</p></div>
+<div class="progress-box"><div class="progress-disc" id="progress-circle" role="progressbar" aria-label="Progression dans l’atelier" aria-valuemin="0" aria-valuemax="21" aria-valuenow="0"><strong id="progress-percent">0%</strong></div><div><small>TON AVANCEMENT</small><strong id="progress-count">0 / 21 leçons</strong><span>Sauvegardé sur cet appareil</span></div></div></div>
+<div class="workspace">
+<div class="track-tabs" role="group" aria-label="Choisir le parcours"><button type="button" data-track="algo" aria-pressed="true"><small>01 /</small> Algorithmique</button><button type="button" data-track="c" aria-pressed="false"><small>02 /</small> Langage C</button><button type="button" data-track="web" aria-pressed="false"><small>03 /</small> HTML & CSS</button></div>
+<div class="studio-grid"><aside class="side-lessons"><div class="side-head"><span>LEÇONS</span><strong id="track-progress">0 / 12</strong></div><ol id="lesson-list" aria-label="Choisir une leçon"></ol><div class="side-tip">✳ <span>Les erreurs sont normales. Une nouvelle tentative, c'est déjà du progrès.</span></div></aside>
+<div class="studio-main">
+<div id="lesson-content"></div>
+<section class="exercise" aria-labelledby="exercise-title"><div class="exercise-title"><div><span class="eyebrow">ESPACE DE PRATIQUE</span><h3 id="exercise-title">Ton espace de travail</h3></div><span id="exercise-label">ALGORITHMIQUE</span></div>
+<div id="algorithm-workspace">
+<div class="editor-heading"><span>● programme.algo</span><div><button type="button" class="quiet" id="reset-code">Réinitialiser</button><button type="button" class="quiet" id="show-hint">Indice</button></div></div>
+<label for="algo-editor" class="sr-only">Éditeur de pseudocode</label><textarea id="algo-editor" class="editor" spellcheck="false" autocomplete="off" autocapitalize="off" rows="9"></textarea>
+<div class="actionbar"><button type="button" class="btn btn-primary" id="validate-algo">▶ Exécuter et vérifier</button><button type="button" class="btn btn-secondary" id="show-solution">Voir la solution</button></div>
+<div class="console"><div><span>↳ CONSOLE / RÉSULTATS</span><span id="console-status">EN ATTENTE</span></div><pre id="console-output" aria-live="polite">Exécute ton programme pour voir la sortie.</pre></div>
+<p class="feedback" id="algo-feedback" role="status" aria-live="polite" hidden></p><p class="hint" id="algo-hint" hidden></p>
+<div class="comparison"><span class="eyebrow">LE MÊME PRINCIPE DANS UN VRAI LANGAGE</span><div class="snippet-tabs"><button type="button" data-snippet="js" aria-pressed="true">JavaScript</button><button type="button" data-snippet="c" aria-pressed="false">Langage C</button></div><pre id="code-comparison"></pre><small>Ce sont des exemples en vrais langages. L’éditeur ci-dessus exécute uniquement un pseudocode pédagogique.</small></div></div>
+<div id="c-workspace" hidden><div class="editor-heading"><span>EXEMPLE DE CODE C</span><small>LECTURE SEULE</small></div><pre id="c-sample" class="code-sample"></pre><fieldset class="quiz" id="c-quiz"><legend id="c-question">Question</legend><div id="c-choices"></div></fieldset><div class="actionbar"><button type="button" class="btn btn-primary" id="check-c">Vérifier ma réponse ↗</button></div><p class="feedback" id="c-feedback" role="status" aria-live="polite" hidden></p><p class="note">Ce parcours enseigne à lire et comprendre le langage C, mais n'exécute pas le C. Un compilateur sera nécessaire pour pratiquer des programmes C complets.</p></div>
+<div id="web-workspace" hidden><p class="web-goal" id="web-goal"></p><div class="web-editors"><div><label for="html-editor">HTML</label><textarea class="editor" id="html-editor" spellcheck="false" rows="8"></textarea></div><div><label for="css-editor">CSS</label><textarea class="editor" id="css-editor" spellcheck="false" rows="8"></textarea></div></div><div class="actionbar"><button type="button" id="update-preview" class="btn btn-primary">↻ Actualiser l'aperçu</button><button type="button" id="complete-web" class="btn btn-secondary">Marquer comme pratiqué ✓</button><button type="button" id="web-hint-button" class="quiet">Indice</button></div><div class="preview-header"><span>APERÇU HTML / CSS</span><span>SANS SCRIPTS</span></div><iframe id="web-preview" sandbox="" title="Aperçu isolé HTML et CSS" referrerpolicy="no-referrer"></iframe><p class="feedback" id="web-feedback" role="status" aria-live="polite" hidden></p><p class="note">Cet aperçu bloque les scripts et les ressources externes. Marquer un exercice comme pratiqué ne signifie pas que le code a été automatiquement corrigé.</p></div>
+</section>
+<div class="lesson-footer"><span id="lesson-position">LEÇON 1 SUR 12</span><button type="button" class="btn btn-secondary" id="next-lesson">Leçon suivante →</button></div>
+</div></div></div></div></section>
+<section class="section methodology" id="methode"><div class="shell"><div class="eyebrow">03 / LA MÉTHODE</div><h2>FAIS DES ERREURS.<br><span class="lime">C’EST COMME ÇA QU’ON APPREND.</span></h2><div class="methods"><article><span>01 /</span><h3>Comprends</h3><p>Une notion, un exemple et une consigne simple.</p></article><article><span>02 /</span><h3>Essaie</h3><p>Écris, compare, expérimente librement.</p></article><article><span>03 /</span><h3>Corrige</h3><p>Observe la sortie, les erreurs et les indices.</p></article><article><span>04 /</span><h3>Progresse</h3><p>Reviens quand tu veux sans perdre ton travail.</p></article></div></div></section>
+</main><footer><div class="shell footer"><div><strong>DEV<span class="lime">/</span>LAB</strong><p>Un atelier de code gratuit, sans inscription ni suivi publicitaire.</p></div><div><a href="#atelier">Reprendre l’atelier ↑</a><a href="../index.html">Retour au portfolio ↗</a></div></div></footer>
+</body></html>
