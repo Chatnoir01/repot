@@ -35,3 +35,7 @@ Aucun dépôt privé, secret ou identifiant personnel n'est nécessaire pour pub
 - La recherche décrite est expérimentale ; aucune supériorité du détecteur n'est affirmée.
 - Pas de formulaire fonctionnel ni de tracking.
 - La configuration Pages dépend du compte GitHub, et n'est pas activée par la simple présence du workflow.
+
+## Direction artistique V2 — en cours de validation
+
+Version expérimentale sur une branche séparée : interface éditoriale noire et citron vert, nouveau hero, présentation interactive accessible à trois onglets, identité provisoire DEV/LAB. Le nom public définitif reste à définir. Le site de production ne doit pas être modifié avant revue.

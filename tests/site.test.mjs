@@ -34,3 +34,18 @@ test("les styles adaptatifs et réduction du mouvement sont présents",()=>{
   assert.match(style,/@media\(max-width:540px\)/);
   assert.match(style,/prefers-reduced-motion:reduce/);
 });
+
+
+test("la V2 présente un hero différencié et des onglets accessibles",()=>{
+  const home=read("index.html");
+  const script=read("assets/main.js");
+  const css=read("assets/styles.css");
+  assert.match(home,/class="hero-headline"/);
+  assert.match(home,/data-stage-group/);
+  assert.equal((home.match(/role="tab"/g)||[]).length,3);
+  assert.equal((home.match(/role="tabpanel"/g)||[]).length,3);
+  assert.match(script,/selectStage/);
+  assert.match(script,/ArrowRight/);
+  assert.match(css,/prefers-reduced-motion:reduce/);
+  assert.match(home,/pas de données temps réel/);
+});

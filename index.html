@@ -11,7 +11,7 @@
   <meta property="og:description" content="Portfolio de développeur indépendant : logiciels, cybersécurité et recherche appliquée.">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="robots" content="index,follow">
-  <title>Accueil · Portfolio développeur</title>
+  <title>Accueil · Dev / Lab — Portfolio</title>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="stylesheet" href="assets/styles.css">
   <script src="assets/main.js" defer></script>
@@ -21,7 +21,7 @@
 <div class="site-shell">
   <header class="site-header" data-header>
     <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="Accueil du portfolio"><span class="brand-mark" aria-hidden="true">&lt;/&gt;</span><span>PORTFOLIO<span class="brand-dot">.</span></span></a>
+      <a class="brand" href="index.html" aria-label="Accueil du portfolio"><span class="brand-mark" aria-hidden="true">&lt;/&gt;</span><span>DEV<span class="brand-dot">/</span>LAB</span></a>
       <nav class="site-nav" aria-label="Navigation principale" id="primary-navigation" data-nav><a href="index.html" aria-current="page">Accueil</a>
 <a href="projets/index.html" >Projets</a>
 <a href="laboratoire/index.html" >Laboratoire</a>
@@ -35,30 +35,43 @@
       </div>
     </div>
   </header>
-  <main id="contenu"><section class="hero"><div class="container hero-grid">
- <div class="hero-copy">
-  <div class="availability"><span class="pulse" aria-hidden="true"></span> Indépendant · Projet personnel</div>
-  <span class="eyebrow">DÉVELOPPEMENT / SYSTÈMES / RECHERCHE</span>
-  <h1>Des idées ambitieuses.<br><em>Des systèmes réels.</em></h1>
-  <p class="lead">Je conçois des logiciels et des outils numériques qui relient ingénierie, cybersécurité et intelligence artificielle appliquée. Chaque projet avance par l'expérimentation, les tests et l'amélioration continue.</p>
-  <div class="hero-actions"><a class="button button-primary" href="projets/index.html">Explorer mes projets<span aria-hidden="true">↗</span></a><a class="button button-secondary" href="a-propos/index.html">Découvrir mon approche<span aria-hidden="true">↗</span></a></div>
-  <div class="micro-note"><span class="micro-line"></span> Construire · Comprendre · Vérifier</div>
+  <main id="contenu"><section class="hero hero-wow" aria-labelledby="hero-title">
+ <div class="container hero-shell">
+  <div class="hero-rail"><span class="rail-dot"></span><span>PORTFOLIO / INDÉPENDANT</span><span>2026 —</span></div>
+  <div class="hero-wow-grid">
+   <div class="hero-story">
+    <div class="hero-mini-meta"><span class="live-led" aria-hidden="true"></span> DÉVELOPPEMENT LOGICIEL <span class="hero-slash">//</span> RECHERCHE APPLIQUÉE</div>
+    <h1 id="hero-title" class="hero-headline">DES IDÉES.<br><span class="stroke-line">DU CODE.</span><br><span class="highlight-line">DU CONCRET<span class="period">.</span></span></h1>
+    <div class="hero-foot-row"><div class="hero-foot-line"></div><div><p>Je conçois et développe des systèmes numériques, de l'expérience utilisateur jusqu'à l'architecture technique.</p><div class="hero-actions"><a class="button button-primary" href="projets/index.html">Explorer mes projets <span aria-hidden="true">↗</span></a><a class="button button-secondary" href="a-propos/index.html">Mon approche <span aria-hidden="true">↗</span></a></div></div></div>
+   </div>
+   <div class="hero-experience" aria-label="Présentation interactive des étapes d'un système">
+    <div class="experience-top"><span><span class="experience-cross">✳</span> DEV / LAB</span><span class="experience-indicator">EXPÉRIENCE 001</span></div>
+    <div class="experience-stage">
+      <div class="stage-caption"><span>UNE MÉTHODE DE CONSTRUCTION</span><span class="display-serial">SYS / 01</span></div>
+      <div class="stage-art" aria-hidden="true">
+        <div class="art-circle circle-a"></div><div class="art-circle circle-b"></div><div class="art-circle circle-c"></div>
+        <div class="art-cutline cut-a"></div><div class="art-cutline cut-b"></div>
+        <div class="art-center"><span class="art-center-icon">⌘</span><span>SYSTEM<br>THINKING</span></div>
+        <span class="orbital-point op-1"></span><span class="orbital-point op-2"></span><span class="orbital-point op-3"></span>
+      </div>
+      <div class="stage-panels" data-stage-group>
+        <div role="tablist" aria-label="Étapes du travail" class="stage-tabs">
+          <button type="button" role="tab" id="stage-tab-build" aria-selected="true" tabindex="0" aria-controls="stage-panel-build" data-stage-tab="build"><span>01</span> Concevoir</button>
+          <button type="button" role="tab" id="stage-tab-test" aria-selected="false" tabindex="-1" aria-controls="stage-panel-test" data-stage-tab="test"><span>02</span> Vérifier</button>
+          <button type="button" role="tab" id="stage-tab-evolve" aria-selected="false" tabindex="-1" aria-controls="stage-panel-evolve" data-stage-tab="evolve"><span>03</span> Évoluer</button>
+        </div>
+        <div class="stage-copy" id="stage-panel-build" role="tabpanel" aria-labelledby="stage-tab-build" data-stage-panel="build"><strong>Du besoin à l'architecture.</strong><p>Définir le problème, concevoir la solution, créer un premier système utilisable.</p></div>
+        <div class="stage-copy" id="stage-panel-test" role="tabpanel" aria-labelledby="stage-tab-test" data-stage-panel="test" hidden><strong>Mesurer avant d'affirmer.</strong><p>Contrôler les erreurs, les performances, la sécurité et les limites observées.</p></div>
+        <div class="stage-copy" id="stage-panel-evolve" role="tabpanel" aria-labelledby="stage-tab-evolve" data-stage-panel="evolve" hidden><strong>Faire progresser sans casser.</strong><p>Documenter, renforcer et améliorer les capacités une fois les résultats vérifiés.</p></div>
+      </div>
+      <div class="experience-disclaimer">Illustration interactive de ma méthode — pas de données temps réel.</div>
+    </div>
+   </div>
+  </div>
+  <div class="hero-bottom"><span>SCROLL TO EXPLORE <span aria-hidden="true">↓</span></span><span class="bottom-rule"></span><span>CODE · DESIGN · RESEARCH</span></div>
  </div>
- <div class="hero-visual">
-  <div class="visual-caption"><span>CARTE D'APPROCHE</span><span class="mini-live">● R&D / EN COURS</span></div>
-  <svg class="system-map" viewBox="0 0 520 390" role="img" aria-label="Schéma abstrait reliant conception, ingénierie, analyse et validation">
-   <defs><linearGradient id="arc" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#70baff"/><stop offset="1" stop-color="#65f3d0"/></linearGradient><radialGradient id="halo"><stop stop-color="#308bd5" stop-opacity=".23"/><stop offset="1" stop-color="#308bd5" stop-opacity="0"/></radialGradient></defs>
-   <circle cx="260" cy="188" r="185" fill="url(#halo)"/>
-   <g class="map-rings" stroke="#57718a" stroke-opacity=".25" fill="none"><circle cx="260" cy="188" r="139"/><circle cx="260" cy="188" r="90"/><circle cx="260" cy="188" r="45"/></g>
-   <g stroke="url(#arc)" stroke-opacity=".7" fill="none" stroke-width="1.5"><path d="M154 103L260 188L378 105"/><path d="M260 188L149 287"/><path d="M260 188L380 285"/><path d="M149 287L380 285" stroke-opacity=".3"/></g>
-   <g fill="#101d2b" stroke="#78bfff" stroke-width="1.4"><circle cx="260" cy="188" r="41"/><circle cx="154" cy="103" r="13"/><circle cx="378" cy="105" r="13"/><circle cx="149" cy="287" r="13"/><circle cx="380" cy="285" r="13"/></g>
-   <g fill="#c6e7ff" font-size="12" font-family="system-ui,sans-serif" text-anchor="middle"><text x="260" y="183" font-weight="700">SYSTEM</text><text x="260" y="199">DESIGN</text></g>
-   <g fill="#a5bfd2" font-size="12" font-family="system-ui,sans-serif"><text x="122" y="75">CONCEPTION</text><text x="358" y="76">CODE</text><text x="114" y="320">ANALYSE</text><text x="357" y="319">VALIDATION</text></g>
-   <g fill="#74e6d2"><circle cx="260" cy="49" r="3"/><circle cx="350" cy="188" r="3"/><circle cx="171" cy="188" r="3"/></g>
-  </svg>
-  <div class="visual-footer"><span>01 / Ingénierie avant les promesses</span><span>2026 —</span></div>
- </div>
-</div></section>
+</section>
+<section class="identity-band" aria-label="Domaines de travail"><div class="container identity-band-inner"><span>SOFTWARE ENGINEERING</span><i aria-hidden="true">✳</i><span>CYBERSÉCURITÉ</span><i aria-hidden="true">✳</i><span>INTELLIGENCE ARTIFICIELLE</span><i aria-hidden="true">✳</i><span>SYSTÈMES LOCAUX</span></div></section>
 <section class="section section-lined"><div class="container">
   <div class="section-heading"><div><span class="eyebrow">01 / CE QUE JE CONSTRUIS</span><h2>Du prototype au système.</h2></div><p>Des projets pensés pour résoudre des problèmes concrets, pas seulement pour remplir une galerie.</p></div>
   <div class="three-col">
@@ -86,7 +99,7 @@
 <section class="section section-contact"><div class="container cta-layout"><div><span class="eyebrow">OUVRIR LA DISCUSSION</span><h2>Une idée à construire ?</h2><p>Échanges techniques, projets utiles et collaborations possibles.</p></div><a class="button button-primary" href="contact/index.html">Prendre contact<span aria-hidden="true">↗</span></a></div></section></main>
   <footer class="site-footer">
     <div class="container footer-top">
-      <div><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">&lt;/&gt;</span><span>PORTFOLIO<span class="brand-dot">.</span></span></a><p>Conception, développement et recherche appliquée.<br>Identité publique à définir.</p></div>
+      <div><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">&lt;/&gt;</span><span>DEV<span class="brand-dot">/</span>LAB</span></a><p>Conception, développement et recherche appliquée.<br>Identité publique à définir.</p></div>
       <div class="footer-links"><strong>Explorer</strong><a href="projets/index.html">Projets</a><a href="laboratoire/index.html">Laboratoire</a><a href="journal/index.html">Journal</a></div>
       <div class="footer-links"><strong>Informations</strong><a href="contact/index.html">Contact</a><a href="confidentialite/index.html">Confidentialité</a><a href="https://github.com/Chatnoir01" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
     </div>
