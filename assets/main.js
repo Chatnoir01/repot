@@ -47,4 +47,33 @@
     });
   }
   if (year) year.textContent = String(new Date().getFullYear());
+
+  // Accessible, purely local editorial showcase: no network or analytics.
+  const tabs = [...document.querySelectorAll("[data-stage-tab]")];
+  const panels = [...document.querySelectorAll("[data-stage-panel]")];
+  function selectStage(key, shouldFocus=false) {
+    tabs.forEach(tab => {
+      const active=tab.dataset.stageTab===key;
+      tab.setAttribute("aria-selected",String(active));
+      tab.tabIndex=active ? 0 : -1;
+      if(active && shouldFocus) tab.focus();
+    });
+    panels.forEach(panel => {
+      panel.hidden=panel.dataset.stagePanel!==key;
+    });
+  }
+  tabs.forEach((tab,index) => {
+    tab.addEventListener("click",()=>selectStage(tab.dataset.stageTab));
+    tab.addEventListener("keydown",event=>{
+      let next;
+      if(event.key==="ArrowRight") next=(index+1)%tabs.length;
+      if(event.key==="ArrowLeft") next=(index-1+tabs.length)%tabs.length;
+      if(event.key==="Home") next=0;
+      if(event.key==="End") next=tabs.length-1;
+      if(next!==undefined){
+        event.preventDefault();
+        selectStage(tabs[next].dataset.stageTab,true);
+      }
+    });
+  });
 })();
