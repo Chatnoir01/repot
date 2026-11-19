@@ -23,6 +23,13 @@ jobs:
           node-version: '22'
       - run: node --test tests/*.test.mjs
       - run: node scripts/verify.mjs
+      - name: Fetch Academy C compiler binaries
+        run: |
+          curl -fLsS --retry 3 https://divsmith.github.io/c2wasm/compiler.wasm -o academy/compiler.wasm
+          curl -fLsS --retry 3 https://divsmith.github.io/c2wasm/assembler.wasm -o academy/assembler.wasm
+          sha256sum academy/compiler.wasm academy/assembler.wasm
+      - name: Verify actual C programs compile and execute
+        run: node scripts/verify-actual-c-compiler.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
