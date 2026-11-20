@@ -13,7 +13,7 @@ export function sandboxDocument(){
  '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; connect-src \'none\'; script-src \'unsafe-inline\' \'unsafe-eval\' blob:; worker-src blob:; img-src \'none\'; font-src \'none\'; frame-src \'none\'; object-src \'none\'; form-action \'none\'; base-uri \'none\'">'+
  '</head><body><script>'+safe+'</scr'+'ipt></body></html>';
 }
-export function runJavaScript(frame,code,checks=[],deadlineMs=3500){
+export function runJavaScript(frame,code,checks=[],deadlineMs=3500,signal){
  if(typeof code!=="string"||code.length>JS_LIMIT)return Promise.resolve({ok:false,error:"Code JavaScript trop long.",output:"",tests:[]});
  if(!Array.isArray(checks)||checks.length>12)return Promise.resolve({ok:false,error:"Trop de tests.",output:"",tests:[]});
  if(frame?.getAttribute("sandbox")!=="allow-scripts")return Promise.resolve({ok:false,error:"Cadre JavaScript non isolé.",output:"",tests:[]});
@@ -23,11 +23,13 @@ export function runJavaScript(frame,code,checks=[],deadlineMs=3500){
   const finish=result=>{
    if(settled)return;settled=true;
    window.removeEventListener("message",onMessage);
+   signal?.removeEventListener("abort",onAbort);
    if(timer!==null)clearTimeout(timer);
    try{frame.contentWindow?.postMessage({action:"stop",token},"*");}catch{}
    frame.srcdoc="";
    resolve(result);
   };
+  const onAbort=()=>finish({ok:false,error:"Exécution interrompue.",output:"",tests:[]});
   const onMessage=event=>{
    if(event.source!==frame.contentWindow)return;
    const d=event.data||{};
@@ -36,6 +38,8 @@ export function runJavaScript(frame,code,checks=[],deadlineMs=3500){
    else if(d.token===token&&d.kind==="error")finish({ok:false,error:d.message||"Erreur isolée.",output:"",tests:[]});
   };
   window.addEventListener("message",onMessage);
+  if(signal?.aborted){onAbort();return;}
+  signal?.addEventListener("abort",onAbort,{once:true});
   timer=setTimeout(()=>finish({ok:false,error:"Temps d'exécution dépassé : programme interrompu.",output:"",tests:[]}),Math.max(1000,Math.min(deadlineMs,8000)));
   frame.srcdoc=sandboxDocument();
  });
@@ -52,14 +56,15 @@ export function previewWeb(frame,files){
  if(frame?.getAttribute("sandbox")!=="")throw new Error("Aperçu non isolé.");
  frame.srcdoc=webDocument(files);
 }
-export function runCWorker(cases,deadlineMs=28000){
+export function runCWorker(cases,deadlineMs=28000,signal){
  if(!Array.isArray(cases)||cases.length===0||cases.length>5)return Promise.resolve({ok:false,error:"Cas C invalides.",results:[]});
  return new Promise(resolve=>{
   let done=false;
   const worker=new Worker("../academy-v4/compile-worker.js");
   const requestId=1;
   let timer=null;
-  const finish=result=>{if(done)return;done=true;clearTimeout(timer);worker.terminate();resolve(result);};
+  const finish=result=>{if(done)return;done=true;clearTimeout(timer);signal?.removeEventListener("abort",onAbort);worker.terminate();resolve(result);};
+  const onAbort=()=>finish({ok:false,error:"Exécution interrompue.",results:[]});
   worker.onmessage=event=>{
    const d=event.data||{};
    if(d.requestId!==requestId)return;
@@ -67,6 +72,8 @@ export function runCWorker(cases,deadlineMs=28000){
    else if(d.kind==="error")finish({ok:false,error:d.message||"Erreur C.",results:[]});
   };
   worker.onerror=e=>finish({ok:false,error:e.message||"Erreur du compilateur WebAssembly.",results:[]});
+  if(signal?.aborted){onAbort();return;}
+  signal?.addEventListener("abort",onAbort,{once:true});
   timer=setTimeout(()=>finish({ok:false,error:"Temps limite atteint : compilation ou boucle interrompue.",results:[]}),Math.max(2000,Math.min(deadlineMs,35000)));
   worker.postMessage({requestId,cases});
  });
