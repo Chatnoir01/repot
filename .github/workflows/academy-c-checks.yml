@@ -1,0 +1,26 @@
+name: Academy real C compiler checks
+on:
+  push:
+    branches: ['codex/academy-real-c-compiler-v3-20261119']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download real C WebAssembly compiler
+        run: |
+          curl -fLsS --retry 3 https://divsmith.github.io/c2wasm/compiler.wasm -o academy/compiler.wasm
+          curl -fLsS --retry 3 https://divsmith.github.io/c2wasm/assembler.wasm -o academy/assembler.wasm
+          printf '%s\n' '5852995d1cb03db58e473b4c16a1d7dd50748feca43b9d335ddcb0e166dbfc49  academy/compiler.wasm' '6fa4c8799d55f7af228050ba56a4a7cd9a5280f97f97622d17c709c9a231a1ef  academy/assembler.wasm' | sha256sum -c -
+      - name: Prove actual compilation and execution of C curriculum solutions
+        run: node scripts/verify-actual-c-compiler.mjs
+      - name: Run existing and curriculum tests
+        run: node --test tests/*.test.mjs
+      - name: Verify static site files
+        run: node scripts/verify.mjs

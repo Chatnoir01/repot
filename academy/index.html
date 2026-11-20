@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a0e12">
+<meta name="description" content="DEV/LAB Academy : apprendre le vrai langage C avec un éditeur de code, une compilation WebAssembly, des tests et des explications en français.">
+<title>DEV/LAB ACADEMY — Le vrai code, pas des simulations</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.20/codemirror.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.20/codemirror.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.20/mode/clike/clike.min.js"></script>
+<script type="module" src="studio.js"></script>
+</head>
+<body>
+<a class="skip" href="#editor-title">Aller à l'éditeur C</a>
+<header class="topbar"><a class="identity" href="../index.html"><span class="id-logo">{ }</span><span>DEV<span class="lime">/</span>LAB <b>ACADEMY</b></span></a><div class="bar-center"><span class="light-dot"></span><span>APPRENDRE EN ÉCRIVANT DU VRAI CODE</span></div><a href="../atelier/index.html" class="back">Atelier précédent ↗</a></header>
+<div class="workspace">
+<aside class="sidebar" aria-labelledby="syllabus-title">
+<div class="side-brand"><span class="mini">DEV/LAB / FORMATION</span><h1 id="syllabus-title">Le langage C<span class="lime">.</span></h1><p>Des fondations au mini-projet, avec compilation et tests.</p></div>
+<div class="progress-summary"><div><span>TA PROGRESSION</span><strong id="progress-number">0 / 10</strong></div><div class="bar"><i id="progress-bar"></i></div><small>Enregistrée sur cet appareil.</small></div>
+<nav id="syllabus" aria-label="Sommaire des leçons"></nav>
+<div class="sidebar-footer"><p>Compilateur réel, exécuté dans ton navigateur.</p><small>Sous-ensemble C89/C90. Aucun compte nécessaire.</small></div>
+</aside>
+<main class="center">
+<div class="crumb"><span>DEV/LAB</span><span>/</span><span>LANGAGE C</span><span>/</span><span id="crumb-lesson">01</span><span class="runtime-chip"><i class="light-dot"></i> COMPILATEUR WASM</span></div>
+<section class="lesson-header" aria-labelledby="lesson-title"><div class="lesson-overline"><span id="lesson-module">MODULE 01</span><span id="lesson-duration">9 MIN</span></div><h2 id="lesson-title">Ton premier programme C</h2><p id="lesson-theory"></p><div class="objective"><strong>TA MISSION</strong><p id="lesson-goal"></p></div></section>
+<section class="editor-card" aria-labelledby="editor-title">
+<div class="editor-header"><div class="filetab"><span class="file-icon">C</span><span id="file-title">main.c</span><span class="unsaved" id="saved-indicator">●</span></div><div class="editor-header-actions"><button id="reset-code" class="text-btn" type="button">↶ Réinitialiser</button><button id="copy-code" class="text-btn" type="button">Copier</button></div></div>
+<div class="editor-subheader"><h3 id="editor-title">Éditeur de code C</h3><span>Ctrl + Entrée pour exécuter</span></div>
+<label for="c-editor" class="sr-only">Code source C</label><textarea id="c-editor" spellcheck="false" autocapitalize="off" autocomplete="off" rows="15"></textarea>
+<div class="runbar"><div class="runtime-status"><span id="compiler-status" role="status" aria-live="polite">COMPILATEUR NON CHARGÉ</span></div><div class="run-actions"><button id="stop-code" class="btn stop" type="button" disabled>■ Stop</button><button id="run-code" class="btn run" type="button">▶ Compiler & exécuter</button></div></div>
+</section>
+<div class="results">
+<div class="terminal-panel"><div class="terminal-title"><span>TERMINAL</span><span id="terminal-label">EN ATTENTE</span></div><div class="stdin"><label for="stdin-input">Entrée standard (stdin) — facultatif</label><textarea id="stdin-input" rows="2" placeholder="Texte envoyé au programme si celui-ci lit une entrée…"></textarea></div><pre id="terminal-output" aria-live="polite">Clique sur « Compiler & exécuter » pour voir les diagnostics et la sortie de ton vrai programme C.</pre></div>
+<div class="tests-panel"><div class="terminal-title"><span>TESTS DE L'EXERCICE</span><span id="test-counter">0 / 0</span></div><ol id="test-results" aria-live="polite"><li>Les tests apparaîtront après l'exécution.</li></ol><p>Pour les fonctions, plusieurs valeurs sont testées automatiquement.</p></div>
+</div>
+<div class="bottom-actions"><button id="hint-button" class="btn subtle" type="button">💡 Un indice</button><button id="solution-button" class="btn subtle" type="button">Afficher la solution</button><button id="next-lesson" class="btn next" type="button">Leçon suivante →</button></div>
+<div id="assistant-feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+</main>
+<aside class="right-panel" aria-label="Explications du cours"><div class="right-inner">
+<div class="right-eyebrow"><span>COURS GUIDÉ</span><span id="difficulty">DÉBUTANT</span></div><h2>Comprendre<span class="lime">.</span></h2>
+<p class="right-intro">Lis les notions, puis expérimente directement dans l'éditeur. Le compilateur te signalera les erreurs de syntaxe.</p>
+<h3>À retenir</h3><ol class="concept-list" id="principles"></ol>
+<div class="tip"><strong>⚠ ERREUR FRÉQUENTE</strong><p id="pitfall"></p></div>
+<div class="tip secondary"><strong>✓ BILAN DE LA LEÇON</strong><p id="review"></p></div>
+<hr>
+<h3>Une vraie compilation</h3><p>Le studio compile le code C en WebAssembly, puis exécute le résultat dans un processus navigateur isolé.</p><p>Il prend en charge un sous-ensemble du C89/C90 : ce n'est pas GCC ou Clang complet. Les programmes C avancés peuvent donc ne pas être compatibles.</p><a class="source-link" href="https://github.com/divsmith/c2wasm" target="_blank" rel="noopener noreferrer">Technologie du compilateur et licence MIT ↗</a>
+</div></aside>
+</div>
+<footer class="mobile-footer"><a href="../index.html">Portfolio</a><a href="../atelier/index.html">Ancien atelier</a><span>DEV/LAB ACADEMY · V3</span></footer>
+</body></html>
