@@ -47,7 +47,7 @@ try{
  await p.locator("#code-editor").focus();
  await p.locator("#code-editor").press("ControlOrMeta+End");
  await p.locator("#code-editor").press("Enter");
- await p.locator("#code-editor").press("Shift+9");
+ await p.locator("#code-editor").press("Shift+Digit9");
  assert.match(await p.locator("#code-editor").inputValue(),/\(\)/);
  assert.match(await p.locator("#editor-position").textContent(),/L\d+:C\d+/);
  console.log("PASS editor smart delimiter and position tracking");
