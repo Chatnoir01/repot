@@ -60,7 +60,7 @@ test("Campus code execution is real, sandboxed, and fails closed",()=>{
  assert.match(runner,/sandbox/);
  assert.match(sandboxDocument(),/worker-src blob:/);
  assert.match(runner,/allow-scripts/);
- assert.match(app,/academy-v4\/compile-worker\.js/);
- assert.match(app,/new Worker/);
- assert.match(app,/\.terminate\(\)/);
+ assert.match(runner,/academy-v4\/compile-worker\.js/);
+ assert.match(runner,/new Worker/);
+ assert.match(runner,/\.terminate\(\)/);
 });
