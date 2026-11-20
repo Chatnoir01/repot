@@ -211,6 +211,7 @@ async function execute(mode="run"){
  const code=w.files[p.entry],id=++request;
  if(!code?.trim()){showNotice("Le fichier à exécuter est vide.",true);return;}
  if(code.length>12000){showNotice("Le fichier à exécuter dépasse 12 000 caractères.",true);return;}
+ abortRun=new AbortController();
  setWorking(true,mode);
  $("check-results").replaceChildren(el("li","","Exécution des cas de test…"));
  put("result-console","Chargement du véritable environnement d'exécution…");
@@ -221,7 +222,7 @@ async function execute(mode="run"){
    const selected=mode==="test"&&cases.length?cases:cases.length?[cases[0]]:[{name:"Exécution libre",source:code,stdin:"",expected:""}];
    const input=$("stdin-field").value.slice(0,1024);
    const runCases=selected.map(c=>({...c,stdin:mode==="run"&&input?input:c.stdin}));
-   result=await runCWorker(runCases,30000);
+   result=await runCWorker(runCases,30000,abortRun.signal);
    if(id!==request)return;
    if(!result.ok){
     put("result-console",result.error||"Le compilateur ne répond pas.");
@@ -242,7 +243,7 @@ async function execute(mode="run"){
   }else{
    const testMode=mode==="test"&&!!p.checks?.length;
    const checksToRun=testMode?jsChecks(p):[];
-   result=await runJavaScript($("runner-frame"),code,checksToRun,3500);
+   result=await runJavaScript($("runner-frame"),code,checksToRun,3500,abortRun.signal);
    if(id!==request)return;
    put("result-console",(result.output||"(Aucun console.log)")+(result.error?"\n[ERREUR]\n"+result.error:""));
    put("runtime-status",result.ok?"EXÉCUTION JS TERMINÉE":"ERREUR JS");
