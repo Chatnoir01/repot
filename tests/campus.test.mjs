@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {projects,tracks,projectMap,getCCases,jsChecks} from "../campus/catalog.mjs";
+import {sandboxDocument,webDocument} from "../campus/runner.mjs";
 import {normalizeState,defaultWorkspace,addFile,cleanFiles,completeProject} from "../campus/state.mjs";
 test("Campus contains real C, JS and HTML/CSS projects with structured explanations",()=>{
  assert.ok(projects.length>=12);
@@ -54,9 +55,10 @@ test("Campus code execution is real, sandboxed, and fails closed",()=>{
  assert.match(page,/id="btn-test"/);
  assert.match(page,/id="btn-run"/);
  assert.match(page,/id="btn-export"/);
- assert.match(runner,/connect-src 'none'/);
+ assert.match(sandboxDocument(),/connect-src 'none'/);
+ assert.match(webDocument({'index.html':'<h1>Test</h1>','style.css':'body {color:red}'}),/connect-src 'none'/);
  assert.match(runner,/sandbox/);
- assert.match(runner,/worker-src blob:/);
+ assert.match(sandboxDocument(),/worker-src blob:/);
  assert.match(runner,/allow-scripts/);
  assert.match(app,/academy-v4\/compile-worker\.js/);
  assert.match(app,/new Worker/);
