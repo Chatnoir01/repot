@@ -1,12 +1,14 @@
 import {projects,tracks,projectMap,getCCases,jsChecks} from "./catalog.mjs";
 import {STORAGE_KEY,defaultWorkspace,readState,saveState,addFile,cleanFiles,projectDone,completeProject} from "./state.mjs";
 import {runJavaScript,runCWorker,previewWeb,normalized} from "./runner.mjs";
+import {getGuidedLesson,checkUnderstanding,learningStats} from "./learning.mjs";
 
 const $=id=>document.getElementById(id);
 const put=(id,value)=>{$(id).textContent=String(value)};
 const el=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=String(txt);return n;};
 const state=readState(localStorage,projectMap);
 let libraryFilter="all", sidebarFilter="all",working=false,request=0,abortRun=null,hintLevel=0;
+let learningStep=0,selectedAnswer=null,quizChecked=false;
 const tracksById=Object.fromEntries(tracks.map(t=>[t.id,t]));
 const genericGuide={
  mission:"Construit un programme personnel. Ici, tu explores librement, sans validation automatique.",
@@ -113,8 +115,9 @@ function renderLibrary(){
  document.querySelectorAll("[data-library-filter]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.libraryFilter===libraryFilter)));
 }
 function progress(){
- const count=state.completed.filter(id=>Object.hasOwn(projectMap,id)).length;
- const ratio=count/projects.length*100;
+ const stats=learningStats(state.completed,projects);
+ const count=stats.completed;
+ const ratio=stats.percent;
  put("progress-percent",Math.round(ratio)+"%");
  put("progress-label",count+" / "+projects.length+" projets");
  $("progress-ring").style.setProperty("--percent",ratio+"%");
@@ -128,6 +131,91 @@ function renderGuide(){
  const steps=$("guide-steps");steps.replaceChildren();
  p.guide.steps.forEach(step=>steps.append(el("li","",step)));
  hintLevel=0;$("hint-output").hidden=true;$("hint-output").textContent="";
+}
+function renderLearning(){
+ const project=currentProject(),guide=getGuidedLesson(project.id),section=$("guided-lesson");
+ section.hidden=!guide;
+ if(!guide)return; // Personal projects have no invented guided course.
+ learningStep=Math.max(0,Math.min(learningStep,2));
+ const step=guide.stages[learningStep];
+ const first=learningStep===0,second=learningStep===1,last=learningStep===2;
+ put("guided-lesson-title","Apprends en faisant, pas en devinant.");
+ put("learning-step-counter","ÉTAPE "+(learningStep+1)+" / 3");
+ put("learning-phase-tag",first?"DÉCODER":second?"PASSER À L'ACTION":"QUESTION ÉCLAIR");
+ put("learning-skill",project.skills?.slice(0,2).join(" · ")||"Mission pratique");
+ put("learning-step-title",first?"Voici comment ça marche.":step.title+". À toi de jouer !");
+ put("learning-explainer",first?guide.story:step.instruction);
+ $("learning-analogy").hidden=!first;
+ put("learning-analogy-text",guide.analogy);
+ const walk=$("walkthrough");walk.replaceChildren();walk.hidden=last;
+ if(!last){
+  const title=el("div","walkthrough-header",first?"LE CODE DÉCRYPTÉ, SANS JARGON":"REPÈRES UTILES DANS TON CODE");
+  walk.append(title);
+  guide.walkthrough.forEach((item,i)=>{
+   const card=el("div","walkthrough-card");
+   card.append(el("span","walkthrough-index",String(i+1).padStart(2,"0")));
+   const content=el("div","walkthrough-content");
+   const snippet=el("code","walkthrough-code",item.code);
+   const explanation=el("p","walkthrough-explanation",item.explain);
+   content.append(snippet,explanation);
+   card.append(content);walk.append(card);
+  });
+ }
+ const question=$("lesson-question");question.hidden=!last;
+ $("learning-challenge").hidden=!last;
+ if(last){
+  put("question-prompt",guide.question.prompt);
+  put("learning-challenge","POUR ALLER PLUS LOIN  ·  "+guide.challenge);
+  const choices=$("question-choices");choices.replaceChildren();
+  guide.question.options.forEach((label,i)=>{
+   const button=el("button","question-choice");
+   button.type="button";
+   button.setAttribute("aria-pressed",String(selectedAnswer===i));
+   button.append(el("span","answer-letter",String.fromCharCode(65+i)),el("span","",label));
+   button.addEventListener("click",()=>{
+    selectedAnswer=i;quizChecked=false;
+    choices.querySelectorAll("button").forEach((b,j)=>b.setAttribute("aria-pressed",String(i===j)));
+    $("answer-feedback").hidden=true;$("lesson-answer").disabled=false;
+   });
+   choices.append(button);
+  });
+  if(quizChecked&&selectedAnswer!==null){
+   const evaluation=checkUnderstanding(project.id,selectedAnswer);
+   const fb=$("answer-feedback");fb.hidden=false;
+   fb.classList.toggle("wrong",!evaluation.correct);
+   fb.textContent=(evaluation.correct?"✓ Bien compris ! ":"Pas encore — retiens ceci : ")+evaluation.explanation;
+  }else{$("answer-feedback").hidden=true;}
+  $("lesson-answer").disabled=selectedAnswer===null;
+ }
+ $("learn-tabs").querySelectorAll("[data-learn-step]").forEach(button=>{
+  const active=Number(button.dataset.learnStep)===learningStep;
+  button.setAttribute("aria-selected",String(active));button.tabIndex=active?0:-1;
+ });
+ put("btn-next-step",last?"Ouvrir l'éditeur ↓":second?"Passer à la vérification →":"Essayer dans le studio →");
+}
+function setLearningStep(value){
+ if(!getGuidedLesson(currentProject().id))return;
+ learningStep=Math.max(0,Math.min(2,value));
+ renderLearning();
+}
+function showMilestone(manual=false){
+ const project=currentProject();
+ if(!Object.hasOwn(projectMap,project.id))return;
+ const dialog=$("milestone-dialog");
+ put("milestone-title",manual?"Atelier pratiqué !":"Mission validée !");
+ put("milestone-description",manual
+  ?"Tu as pratiqué le HTML et le CSS et marqué cet atelier comme réalisé. L'apparence n'est pas évaluée automatiquement."
+  :"Ton programme a réellement réussi tous les tests de cette mission. Chaque erreur corrigée t'a fait progresser.");
+ const trackProjects=projects.filter(p=>p.track===project.track);
+ const nextInTrack=trackProjects.findIndex(p=>p.id===project.id)+1;
+ const recommended=trackProjects[nextInTrack]||projects.find(p=>!state.completed.includes(p.id)&&p.id!==project.id);
+ $("next-project").disabled=!recommended;
+ $("next-project").dataset.projectId=recommended?.id||"";
+ $("next-project").textContent=recommended?"Mission suivante : "+recommended.title+" →":"Tu as terminé toutes les missions !";
+ if(typeof dialog.showModal==="function"&&!dialog.open)dialog.showModal();
+}
+function closeMilestone(){
+ const dialog=$("milestone-dialog");if(dialog.open)dialog.close();
 }
 function renderProject(){
  const p=currentProject(),w=workspace(),t=tracksById[p.track];
@@ -151,7 +239,7 @@ function renderProject(){
  put("check-disclaimer",p.track==="web"?"Pas de validation automatique du HTML/CSS : le progrès reflète uniquement ta pratique.":"Les tests utilisent le moteur réel et les cas définis dans le cours.");
  put("editor-help",p.track==="web"?"L'aperçu utilise index.html et style.css. Aucun script n'est exécuté.":"Ctrl + Entrée : exécuter · Ctrl + Maj + Entrée : tester");
  updateEditor();
- renderNavigation();renderGuide();progress();
+ renderNavigation();renderGuide();renderLearning();progress();
  if(p.track==="web")updateWebPreview();
  else $("preview-frame").srcdoc="";
  persist();
@@ -160,6 +248,7 @@ function selectProject(id,scroll=false){
  if(!findProject(id))return;
  if(working)stopExecution();
  saveEditor();state.active=id;
+ learningStep=0;selectedAnswer=null;quizChecked=false;
  renderProject();
  if(scroll)document.getElementById("studio").scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"});
 }
@@ -195,10 +284,12 @@ function setWorking(value,mode){
  $("btn-run").disabled=value;$("btn-test").disabled=value;$("btn-stop").disabled=!value;
  if(value)put("runtime-status",mode==="test"?"TESTS EN COURS":"EXÉCUTION");
 }
-function markVerified(){
+function markVerified(manual=false){
  const p=currentProject();
  if(!Object.hasOwn(projectMap,p.id))return;
+ const wasDone=projectDone(state,p.id);
  completeProject(state,p.id);persist();progress();renderNavigation();renderLibrary();
+ if(!wasDone)showMilestone(manual);
 }
 async function execute(mode="run"){
  if(working)return;
@@ -317,6 +408,41 @@ function initEditor(){
   }
  });
 }
+$("learn-tabs").querySelectorAll("[data-learn-step]").forEach(button=>{
+ button.addEventListener("click",()=>setLearningStep(Number(button.dataset.learnStep)));
+ button.addEventListener("keydown",event=>{
+  if(!["ArrowLeft","ArrowRight","Home","End"].includes(event.key))return;
+  event.preventDefault();
+  const next=event.key==="Home"?0:event.key==="End"?2:
+   (learningStep+(event.key==="ArrowRight"?1:2))%3;
+  setLearningStep(next);
+  $("learn-tabs").querySelector('[data-learn-step="'+next+'"]')?.focus();
+ });
+});
+$("btn-restart-lesson").addEventListener("click",()=>{
+ selectedAnswer=null;quizChecked=false;setLearningStep(0);
+ showNotice("Guide repris depuis le début. Tes modifications de code sont conservées.");
+});
+$("btn-next-step").addEventListener("click",()=>{
+ if(learningStep<2)setLearningStep(learningStep+1);
+ else $("code-editor").scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"center"});
+});
+$("lesson-answer").addEventListener("click",()=>{
+ const project=currentProject();
+ if(selectedAnswer===null||!getGuidedLesson(project.id))return;
+ const evaluation=checkUnderstanding(project.id,selectedAnswer);
+ quizChecked=true;
+ const feedbackBox=$("answer-feedback");
+ feedbackBox.hidden=false;feedbackBox.classList.toggle("wrong",!evaluation.correct);
+ feedbackBox.textContent=(evaluation.correct?"✓ Bien compris ! ":"Pas encore — retiens ceci : ")+evaluation.explanation;
+});
+$("close-milestone").addEventListener("click",closeMilestone);
+$("back-to-code").addEventListener("click",closeMilestone);
+$("next-project").addEventListener("click",()=>{
+ const id=$("next-project").dataset.projectId;
+ closeMilestone();
+ if(findProject(id))selectProject(id,true);
+});
 document.querySelectorAll("[data-track-select]").forEach(b=>b.addEventListener("click",()=>{
  const p=projects.find(p=>p.track===b.dataset.trackSelect);
  if(p)selectProject(p.id,true);
@@ -332,7 +458,7 @@ $("btn-test").addEventListener("click",()=>execute("test"));
 $("btn-stop").addEventListener("click",()=>{stopExecution();showNotice("Exécution interrompue par l'utilisateur.");});
 $("btn-practised").addEventListener("click",()=>{
  if(currentProject().track!=="web")return;
- markVerified();
+ markVerified(true);
  put("checks-count","PRATIQUÉ");
  $("check-results").replaceChildren(el("li","pass","✓ Projet marqué comme pratiqué, sans vérification automatique du rendu."));
  showNotice("Projet HTML/CSS marqué comme pratiqué (déclaration personnelle, pas une certification).");
