@@ -1,0 +1,63 @@
+import {chromium} from "playwright";
+import {spawn} from "node:child_process";
+import assert from "node:assert/strict";
+const server=spawn("python3",["-m","http.server","8767","--bind","127.0.0.1","--directory","."],{stdio:"ignore"});
+let browser;
+const errors=[],url="http://127.0.0.1:8767/campus/fondations/";
+async function ready(){for(let i=0;i<60;i++){try{if((await fetch(url)).ok)return;}catch{}await new Promise(r=>setTimeout(r,200));}throw Error("No server");}
+async function waitText(p,id,t,ms=45000){await p.waitForFunction(({id,t})=>document.getElementById(id)?.textContent?.trim()===t,{id,t},{timeout:ms});}
+try{
+ await ready();
+ browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_BIN||"/usr/bin/google-chrome",args:["--no-sandbox"]});
+ const p=await browser.newPage({viewport:{width:1280,height:900}});
+ p.on("pageerror",e=>errors.push(e.message));
+ await p.goto(url,{waitUntil:"load"});
+ await p.locator("#lesson-nav .nav-lesson").nth(7).click();
+ await waitText(p,"lesson-chip","MISSION 08 / 18");
+ await p.locator("#observe-code").click();
+ await waitText(p,"actual-trace-status","MESURÉ PAR LE VRAI PROGRAMME C");
+ await waitText(p,"actual-trace-count","1 / 2");
+ assert.match(await p.locator("#actual-trace-state").textContent(),/score.*5/s);
+ await p.locator("#actual-trace-next").click();
+ await waitText(p,"actual-trace-count","2 / 2");
+ assert.match(await p.locator("#actual-trace-state").textContent(),/score.*8/s);
+ assert.equal((await p.locator("#result-console").textContent()).trim(),"8");
+ console.log("PASS actual C variable measurement 5 -> 8, verified against original executable");
+ await p.locator("#code-editor").fill('int main(void) { return 0; }');
+ assert.equal(await p.locator("#actual-trace").isHidden(),true);
+ await p.locator("#code-editor").fill('#include <stdio.h>\nint main(void) {\n    int score = ;\n    printf("%d\\n", score);\n    return 0;\n}');
+ await p.locator("#validate-code").click();
+ await p.locator("#diagnostic-panel:visible").waitFor({timeout:35000});
+ assert.ok((await p.locator("#diagnostic-detail").textContent()).length>40);
+ console.log("PASS real compiler syntax error receives explanatory guidance");
+ await p.locator("#code-editor").fill('#include <stdio.h>\nint main(void) {\n int score = 5;\n score = score + 1;\n printf("%d\\n", score);\n return 0;\n}');
+ await p.locator("#validate-code").click();
+ await waitText(p,"test-counter","0 / 1",35000);
+ assert.match(await p.locator("#diagnostic-detail").textContent(),/8/);
+ assert.match(await p.locator("#diagnostic-detail").textContent(),/6/);
+ console.log("PASS wrong output explains actual and expected values");
+ await p.locator("#code-editor").focus();
+ await p.locator("#code-editor").press("ControlOrMeta+End");
+ await p.locator("#code-editor").press("Enter");
+ await p.locator("#code-editor").press("Shift+9");
+ assert.match(await p.locator("#code-editor").inputValue(),/\(\)/);
+ assert.match(await p.locator("#editor-position").textContent(),/L\d+:C\d+/);
+ console.log("PASS editor smart delimiter and position tracking");
+ await p.locator("#lesson-nav .nav-lesson").nth(15).click();
+ await p.locator("#observe-code").click();
+ assert.match(await p.locator("#actual-trace-message").textContent(),/n'a pas d'affectation entière simple/);
+ assert.equal(await p.locator("#actual-trace").isHidden(),true);
+ console.log("PASS unsupported source has no fake trace");
+ const m=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ m.on("pageerror",e=>errors.push("Mobile "+e.message));
+ await m.goto(url,{waitUntil:"load"});
+ await m.locator("#observe-code").waitFor();
+ const widths=await m.evaluate(()=>({view:innerWidth,body:document.documentElement.scrollWidth}));
+ assert.ok(widths.body<=widths.view+3,"Overflow "+JSON.stringify(widths));
+ assert.deepEqual(errors,[]);
+ console.log("PASS mobile 390px with real observation controls");
+ await m.close();
+}finally{
+ if(browser)await browser.close();
+ server.kill("SIGTERM");
+}
