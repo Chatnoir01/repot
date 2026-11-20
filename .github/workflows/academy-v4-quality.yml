@@ -14,5 +14,12 @@ jobs:
         with:
           node-version: '22'
       - run: node --test tests/academy-v4.test.mjs
+      - name: Download real C compiler for V4
+        run: |
+          curl -fLsS --retry 3 https://divsmith.github.io/c2wasm/compiler.wasm -o academy-v4/compiler.wasm
+          curl -fLsS --retry 3 https://divsmith.github.io/c2wasm/assembler.wasm -o academy-v4/assembler.wasm
+          printf '%s\n' '5852995d1cb03db58e473b4c16a1d7dd50748feca43b9d335ddcb0e166dbfc49  academy-v4/compiler.wasm' '6fa4c8799d55f7af228050ba56a4a7cd9a5280f97f97622d17c709c9a231a1ef  academy-v4/assembler.wasm' | sha256sum -c -
+      - name: Compile and execute every V4 lesson in real WebAssembly
+        run: node scripts/verify-v4-c-compiler.mjs
       - run: node --test tests/*.test.mjs
       - run: node scripts/verify.mjs
