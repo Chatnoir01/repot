@@ -38,7 +38,7 @@ for(const l of lessons){
  const cases=casesFor(l,l.solution);
  for(const c of cases){
   let output;
-  try{output=await compileRun(c.source,c.stdin);}catch(error){throw new Error(l.id+" "+c.name+": "+String(error.message||error));}
+  try{output=await compileRun(c.source,c.stdin);}catch(error){throw new Error(l.id+" "+c.name+": "+String(error.message||error)+"\nSource C :\n"+c.source);}
   if(output.stdout!==c.expected.trim()||output.code!==0)throw new Error(l.id+" "+c.name+": expected="+JSON.stringify(c.expected)+" actual="+JSON.stringify(output));
   total++;
  }
