@@ -1,4 +1,6 @@
 import {lessons,modules,answerPrediction,traceFrame,makeCases} from "./curriculum.mjs";
+import {instrumentCase,extractExecutionTrace,sameExecutionOutput} from "./live-trace.mjs";
+import {explainCompilationFailure,explainTestFailure} from "./coaching.mjs";
 const $=id=>document.getElementById(id);
 const write=(id,value)=>{$(id).textContent=String(value);};
 const element=(tag,className,text)=>{
@@ -23,6 +25,7 @@ function loadProgress(){
 }
 const state=loadProgress();
 let index=0,traceIndex=0,selectedPrediction=null,activeWorker=null,timeout=null,runNumber=0,isRunning=false,hintClicks=0;
+let actualTrace=[],actualTraceIndex=0,observingAbort=null,diagnosticLine=null;
 const current=()=>lessons[index];
 function save(){
  const ok=(()=>{try{localStorage.setItem(KEY,JSON.stringify(state));return true;}catch{return false;}})();
@@ -41,7 +44,25 @@ function setCode(value){
 function refreshLineNumbers(){
  const n=Math.max(14,code().split("\n").length);
  $("editor-line-numbers").textContent=Array.from({length:n},(_,i)=>i+1).join("\n");
+ updateCursorPosition();
 }
+function updateCursorPosition(){
+ const input=$("code-editor");if(!input)return;
+ const before=input.value.slice(0,input.selectionStart||0);
+ const lines=before.split("\n");
+ write("editor-position","L"+lines.length+":C"+(lines.at(-1).length+1));
+}
+function gotoEditorLine(line){
+ if(!Number.isInteger(line)||line<1)return;
+ const input=$("code-editor"),lines=input.value.split("\n");
+ if(line>lines.length)return;
+ let position=0;
+ for(let n=0;n<line-1;n++)position+=lines[n].length+1;
+ input.focus();input.setSelectionRange(position,position+lines[line-1].length);
+ updateCursorPosition();
+ input.scrollIntoView({block:"center",behavior:"auto"});
+}
+
 function progress(){
  const n=state.done.filter(x=>validIds.has(x)).length;
  write("lesson-progress",n+" / "+lessons.length);
@@ -87,6 +108,47 @@ function showTrace(){
   const dot=element("span",i===traceIndex?"dot active":"dot");
   dots.append(dot);
  }
+}
+function resetMeasuredTrace(){
+ actualTrace=[];actualTraceIndex=0;
+ $("actual-trace").hidden=true;
+ write("actual-trace-status","EN ATTENTE D'UNE MESURE");
+ write("actual-trace-message","Clique sur « Observer mon code » pour mesurer les valeurs d'affectations entières compatibles.");
+}
+function showMeasuredTrace(){
+ if(!actualTrace.length){resetMeasuredTrace();return;}
+ actualTraceIndex=Math.max(0,Math.min(actualTraceIndex,actualTrace.length-1));
+ const frame=actualTrace[actualTraceIndex];
+ $("actual-trace").hidden=false;
+ write("actual-trace-status","MESURÉ PAR LE VRAI PROGRAMME C");
+ write("actual-trace-count",(actualTraceIndex+1)+" / "+actualTrace.length);
+ const display=$("actual-trace-state");display.replaceChildren();
+ const value=element("div","real-observed-line");
+ value.append(element("span","",frame.name+"  /  entier (int)"),element("strong","",String(frame.value)));
+ const origin=element("div","real-trace-instruction","Valeur observée après la ligne "+frame.line+" du code original.");
+ display.append(value,origin);
+ $("actual-trace-previous").disabled=actualTraceIndex===0;
+ $("actual-trace-next").disabled=actualTraceIndex>=actualTrace.length-1;
+ write("actual-trace-message","Trace vérifiée : la sortie normale est identique à celle du programme instrumenté, une fois les sondes retirées.");
+}
+function resetDiagnostic(){
+ diagnosticLine=null;
+ $("diagnostic-panel").hidden=true;
+ $("diagnostic-jump").hidden=true;
+ $("diagnostic-checks").replaceChildren();
+}
+function showDiagnostic(diagnostic){
+ if(!diagnostic)return;
+ const box=$("diagnostic-panel");
+ box.hidden=false;
+ write("diagnostic-title",diagnostic.title||"Vérifie ton programme");
+ write("diagnostic-detail",diagnostic.explanation||"Consulte le message exact du compilateur.");
+ const list=$("diagnostic-checks");list.replaceChildren();
+ for(const check of diagnostic.checks||[])list.append(element("li","",check));
+ if(diagnostic.advice)list.append(element("li","", "Piste de la mission : "+diagnostic.advice));
+ diagnosticLine=Number.isSafeInteger(diagnostic.line)?diagnostic.line:null;
+ $("diagnostic-jump").hidden=diagnosticLine===null||diagnosticLine>code().split("\n").length;
+ $("diagnostic-jump").textContent=diagnosticLine===null?"Voir le code":"Voir la ligne "+diagnosticLine+" dans l'éditeur →";
 }
 function showPrediction(){
  const lesson=current(),container=$("prediction-options");
@@ -136,6 +198,7 @@ function renderLesson(){
  setCode(typeof state.code[lesson.id]==="string"?state.code[lesson.id]:lesson.starter);
  hintClicks=0;$("hint-content").hidden=true;
  traceIndex=0;selectedPrediction=null;showTrace();showPrediction();showSteps();
+ resetMeasuredTrace();resetDiagnostic();
  write("runtime-status","PRÊT");
  write("result-console","Le code de la mission attend que tu l'exécutes…");
  write("test-counter","—");
@@ -157,8 +220,9 @@ function cancelRun(){
  ++runNumber;
  if(timeout){clearTimeout(timeout);timeout=null;}
  if(activeWorker){activeWorker.terminate();activeWorker=null;}
+ if(observingAbort){const abort=observingAbort;observingAbort=null;abort();}
  isRunning=false;
- $("compile-run").disabled=false;$("validate-code").disabled=false;$("stop-code").disabled=true;
+ $("compile-run").disabled=false;$("validate-code").disabled=false;$("observe-code").disabled=false;$("stop-code").disabled=true;
 }
 function showTestResults(rows,tests){
  const list=$("test-cases");list.replaceChildren();
@@ -213,7 +277,7 @@ function startRun(mode="run"){
  try{worker=new Worker("../../academy-v4/compile-worker.js");}
  catch(error){write("result-console","Le compilateur est indisponible : "+error.message);return;}
  activeWorker=worker;isRunning=true;
- $("compile-run").disabled=true;$("validate-code").disabled=true;$("stop-code").disabled=false;
+ $("compile-run").disabled=true;$("validate-code").disabled=true;$("observe-code").disabled=true;$("stop-code").disabled=false;
  write("runtime-status",mode==="test"?"VÉRIFICATION…":"COMPILATION…");
  write("result-console","Le vrai compilateur C analyse et exécute ton programme…");
  if(mode==="test")$("test-cases").replaceChildren(element("li","","Les cas de test sont en cours…"));
