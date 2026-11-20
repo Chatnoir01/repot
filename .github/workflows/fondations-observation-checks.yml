@@ -26,4 +26,5 @@ jobs:
         run: |
           npm install --no-save --no-audit --no-fund playwright@1.56.1
           node scripts/fondations-browser-smoke.mjs
+          node scripts/fondations-observation-smoke.mjs
       - run: node scripts/verify.mjs
