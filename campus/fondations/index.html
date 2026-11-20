@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width,initial-scale=1">
+ <meta name="theme-color" content="#0d1726">
+ <meta name="description" content="DEV/LAB Fondations C : 18 vraies leçons de programmation interactives, prédictions, visualisation des variables et véritable compilateur C WebAssembly.">
+ <meta name="referrer" content="no-referrer">
+ <title>Fondations C — 18 missions pour apprendre vraiment | DEV/LAB</title>
+ <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+ <link rel="stylesheet" href="styles.css">
+ <script type="module" src="app.mjs"></script>
+</head>
+<body>
+<a href="#lesson-main" class="skip-link">Passer directement à la leçon</a>
+<header class="site-header">
+ <a class="brand" href="../index.html"><span class="brand-logo">{ }</span> DEV<span class="brand-slash">/</span>LAB <span class="brand-light">LEARNING</span></a>
+ <div class="course-name"><span class="course-pulse" aria-hidden="true"></span> PARCOURS 01 <span aria-hidden="true">/</span> FONDATIONS C</div>
+ <a class="exit-link" href="../index.html"><span aria-hidden="true">↖</span> Tous les parcours</a>
+</header>
+<div class="application">
+ <aside class="sidebar" aria-labelledby="nav-title">
+  <div class="side-intro">
+   <div class="side-eyebrow">PROGRAMMATION • NIVEAU DÉBUTANT</div>
+   <h1 id="nav-title">Le C, pour<br><em>de vrai.</em></h1>
+   <p>18 petites victoires pour transformer tes premières lignes en un programme qui fonctionne.</p>
+  </div>
+  <div class="overall-progress" aria-label="Progression dans le parcours">
+   <div class="progress-upper"><span>TA PROGRESSION</span><strong id="lesson-progress">0 / 18</strong></div>
+   <div class="progress-track"><div id="lesson-progress-fill"></div></div>
+   <small>Une mission est validée par du vrai code, pas par un quiz.</small>
+  </div>
+  <nav id="lesson-nav" aria-label="Liste des 18 missions"></nav>
+  <div class="sidebar-note"><span>✳</span><p>Ton code et ta progression restent dans ce navigateur. Aucun compte nécessaire.</p></div>
+ </aside>
+ <main id="lesson-main" class="main">
+  <div class="eyebrow-row"><div class="path-trail"><span>TON PARCOURS</span><span class="trail-sep">/</span><span id="lesson-chapter">DÉCOUVRIR</span><span class="trail-sep">/</span><span id="lesson-number">MISSION 01</span></div><div class="experience-tag">★ APPRENDS EN FAISANT</div></div>
+  <section class="mission-intro" aria-labelledby="lesson-title">
+   <div class="mission-subhead"><span id="lesson-chip">MISSION 01 / 18</span><span id="mission-level">PREMIERS PAS</span></div>
+   <h2 id="lesson-title">Ton premier message.</h2>
+   <p id="lesson-goal"></p>
+   <div class="mission-stats"><span>◷ <strong id="lesson-duration">8 MIN</strong> environ</span><span>✧ <strong id="lesson-tag">VRAI LANGAGE C</strong></span><span>✓ TESTS RÉELS</span></div>
+  </section>
+  <div class="content-layout">
+   <div class="learning-column">
+    <section class="learn-card" aria-labelledby="journey-title">
+     <div class="card-heading"><div><span class="card-number">01 / COMPRENDRE</span><h3 id="journey-title">Comprends l'idée.</h3></div><span class="card-icon" aria-hidden="true">✦</span></div>
+     <p id="concept-text"></p>
+     <div class="analogy"><span aria-hidden="true" class="analogy-icon">💡</span><div><strong>Imagine ça…</strong><p id="analogy-text"></p></div></div>
+    </section>
+    <section class="trace-card" aria-labelledby="trace-title">
+     <div class="card-heading trace-heading"><div><span class="card-number">02 / VISUALISER</span><h3 id="trace-title">Regarde ce qui change.</h3></div><span class="trace-example">EXEMPLE GUIDÉ</span></div>
+     <p class="trace-warning">Cette animation illustre l'exemple de la leçon. Elle ne lit pas les variables de ton programme : le résultat réel est dans le terminal.</p>
+     <div class="trace-stage">
+      <div class="trace-top"><span class="live-indicator"></span><strong>ÉTAT DU PROGRAMME</strong><span id="trace-counter">1 / 2</span></div>
+      <div class="trace-vars" id="trace-state" aria-label="Valeurs illustrées"></div>
+      <div class="trace-description"><span>↳</span><p id="trace-caption"></p></div>
+     </div>
+     <div class="trace-controls"><button type="button" id="trace-previous" aria-label="Étape précédente">← Précédent</button><div id="trace-dots" aria-hidden="true"></div><button type="button" id="trace-next">Suivant →</button></div>
+    </section>
+    <section class="predict-card" aria-labelledby="predict-title">
+     <div class="card-heading"><div><span class="card-number">03 / PRÉDIRE</span><h3 id="predict-title">Et toi, tu dirais quoi ?</h3></div><span class="brain-icon" aria-hidden="true">?</span></div>
+     <p class="predict-lead">Avant de lancer le code, prends quelques secondes pour réfléchir. Se tromper fait partie de l'apprentissage.</p>
+     <p id="prediction-prompt" class="prediction-prompt"></p>
+     <div id="prediction-options" class="prediction-options" role="group" aria-label="Choisis ta prédiction"></div>
+     <button type="button" id="check-prediction" class="predict-button" disabled>Comprendre la réponse →</button>
+     <div id="prediction-feedback" class="prediction-feedback" role="status" aria-live="polite" hidden></div>
+    </section>
+   </div>
+   <div class="coding-column">
+    <section class="workshop" aria-labelledby="code-title">
+     <div class="workshop-top"><span class="workshop-tag">04 / À TOI DE JOUER</span><span class="workshop-ready"><i></i> COMPILATEUR WEBASSEMBLY</span></div>
+     <div class="workshop-intro"><h3 id="code-title">Fais-le fonctionner<span class="punctuation">.</span></h3><p id="mission-text"></p></div>
+     <div class="action-steps" id="lesson-steps" aria-label="Les trois étapes de ton exercice"></div>
+     <div class="code-window">
+      <div class="editor-top"><div class="editor-tab"><span class="c-icon">C</span><strong id="code-file">main.c</strong><span class="tab-dot">●</span></div><div class="editor-top-tools"><span>FICHIER SOURCE</span><button type="button" id="download-code" title="Exporter le code en fichier .c">↓ Exporter</button></div></div>
+      <div class="editor-inner"><div id="editor-line-numbers" aria-hidden="true">1</div><label for="code-editor" class="sr-only">Éditeur de code C</label><textarea id="code-editor" rows="14" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Code source du programme C"></textarea></div>
+      <div class="editor-footer"><span>CTRL + ENTRÉE POUR EXÉCUTER</span><span id="save-indicator">SAUVEGARDÉ LOCALEMENT</span></div>
+     </div>
+     <div class="editor-buttons">
+      <button type="button" id="reset-code" class="soft-button">↶ Recommencer</button>
+      <button type="button" id="show-hint" class="soft-button">✧ Un indice</button>
+      <div class="editor-buttons-spacer"></div>
+      <button type="button" id="stop-code" class="stop-button" disabled>■ Stop</button>
+      <button type="button" id="compile-run" class="run-button">▶ Exécuter</button>
+      <button type="button" id="validate-code" class="validate-button">✓ Tester ma solution</button>
+     </div>
+     <p id="hint-content" class="hint-content" hidden></p>
+     <div class="terminal">
+      <div class="terminal-heading"><strong>⌁ TERMINAL</strong><span id="runtime-status">PRÊT</span></div>
+      <pre id="result-console" aria-live="polite">Ton programme attend ses premières instructions…</pre>
+     </div>
+     <div class="test-area">
+      <div class="test-heading"><div><strong>VÉRIFICATION DU CODE</strong><small>Les résultats proviennent du vrai compilateur C</small></div><span id="test-counter">—</span></div>
+      <ol id="test-cases" aria-live="polite"><li>Exécute puis teste ton programme pour vérifier la mission.</li></ol>
+      <div id="test-explanation" class="test-explanation" hidden></div>
+     </div>
+     <div class="recap"><span class="recap-symbol" aria-hidden="true">✳</span><div><strong>CE QUE TU SAURAS FAIRE</strong><p id="lesson-recap"></p></div></div>
+    </section>
+    <div class="journey-footer"><button id="previous-lesson" type="button">← Mission précédente</button><button id="resume-button" type="button">Mission suivante →</button></div>
+   </div>
+  </div>
+ </main>
+</div>
+<dialog id="completion-dialog" class="completion" aria-labelledby="complete-title" aria-describedby="complete-description">
+ <div class="completion-top"><span>✳ FONDATIONS C / MISSION ACCOMPLIE</span><button id="close-completion" type="button" aria-label="Fermer la célébration">×</button></div>
+ <div class="completion-inner"><span class="achievement" aria-hidden="true">✓</span><span class="complete-kicker">TOUS LES TESTS SONT VERTS</span><h2 id="complete-title">Bien joué !</h2><p id="complete-description">Ton programme fonctionne dans les cas testés.</p><div class="completion-buttons"><button type="button" id="continue-lesson">Continuer mon parcours →</button><button type="button" id="stay-lesson">Rester sur ce code</button></div></div>
+ <p class="completion-footnote">Une mission réussie est un progrès mesurable, pas un diplôme ni une certification.</p>
+</dialog>
+<footer class="footer"><span>DEV<span class="brand-slash">/</span>LAB · FONDATIONS C</span><span>VRAI CODE · VRAIS TESTS · PROGRESSION LOCALE</span><a href="../index.html">Retour au Campus ↗</a></footer>
+</body>
+</html>
