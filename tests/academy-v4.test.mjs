@@ -43,7 +43,7 @@ test("compiler errors are parsed without executing text as HTML",()=>{
 test("real IDE offers separate Run and Validate, export, and staged hints",()=>{
  const html=readFileSync("academy-v4/index.html","utf8");
  const script=readFileSync("academy-v4/studio.js","utf8");
- for(const id of ["run-code","validate-code","stop-code","download-code","hint-button","solution-button","terminal-output","test-results"]) assert.match(html,new RegExp("id=\\""+id+"\\""));
+ for(const id of ["run-code","validate-code","stop-code","download-code","hint-button","solution-button","terminal-output","test-results"]) assert.match(html,new RegExp('id="'+id+'"'));
  assert.match(script,/new Worker/);
  assert.match(script,/\.terminate\(\)/);
  assert.match(script,/download/);
