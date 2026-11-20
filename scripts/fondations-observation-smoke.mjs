@@ -20,9 +20,17 @@ try{
  assert.match(await p.locator("#actual-trace-state").textContent(),/score.*5/s);
  await p.locator("#actual-trace-next").click();
  await waitText(p,"actual-trace-count","2 / 2");
+ assert.match(await p.locator("#actual-trace-state").textContent(),/score.*6/s);
+ assert.equal((await p.locator("#result-console").textContent()).trim(),"6");
+ console.log("PASS real C observation records STARTER values 5 -> 6, not the expected lesson answer");
+ await p.locator("#code-editor").fill('#include <stdio.h>\nint main(void) {\n    int score = 5;\n    score = score + 3;\n    printf("%d\\n", score);\n    return 0;\n}');
+ await p.locator("#observe-code").click();
+ await waitText(p,"actual-trace-status","MESURÉ PAR LE VRAI PROGRAMME C");
+ await p.locator("#actual-trace-next").click();
+ await waitText(p,"actual-trace-count","2 / 2");
  assert.match(await p.locator("#actual-trace-state").textContent(),/score.*8/s);
  assert.equal((await p.locator("#result-console").textContent()).trim(),"8");
- console.log("PASS actual C variable measurement 5 -> 8, verified against original executable");
+ console.log("PASS real C observation records CORRECTED values 5 -> 8, verified against original");
  await p.locator("#code-editor").fill('int main(void) { return 0; }');
  assert.equal(await p.locator("#actual-trace").isHidden(),true);
  await p.locator("#code-editor").fill('#include <stdio.h>\nint main(void) {\n    int score = ;\n    printf("%d\\n", score);\n    return 0;\n}');
