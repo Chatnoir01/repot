@@ -1,0 +1,28 @@
+name: Campus checks
+on:
+  push:
+    branches: ['codex/devlab-campus-foundation-20261120']
+permissions:
+  contents: read
+jobs:
+  campus:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Campus and existing automated tests
+        run: node --test tests/*.test.mjs
+      - run: node scripts/verify.mjs
+      - name: Fetch verified real C compiler binaries
+        run: |
+          curl -fLsS --retry 3 https://divsmith.github.io/c2wasm/compiler.wasm -o academy-v4/compiler.wasm
+          curl -fLsS --retry 3 https://divsmith.github.io/c2wasm/assembler.wasm -o academy-v4/assembler.wasm
+          printf '%s\n' '5852995d1cb03db58e473b4c16a1d7dd50748feca43b9d335ddcb0e166dbfc49  academy-v4/compiler.wasm' '6fa4c8799d55f7af228050ba56a4a7cd9a5280f97f97622d17c709c9a231a1ef  academy-v4/assembler.wasm' | sha256sum -c -
+      - name: Install Playwright and Chromium
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.56.1
+          which google-chrome || which chromium
+      - name: Test real browser execution
+        run: node scripts/campus-browser-smoke.mjs

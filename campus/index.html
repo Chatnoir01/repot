@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="fr">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width,initial-scale=1">
+ <meta name="theme-color" content="#0b1117">
+ <meta name="description" content="DEV/LAB Campus : apprends à programmer en C, JavaScript et HTML/CSS à travers des projets, un éditeur, des tests réels et un espace de travail sauvegardé localement.">
+ <meta name="referrer" content="no-referrer">
+ <meta property="og:title" content="DEV/LAB Campus — Apprendre en construisant">
+ <meta property="og:description" content="Trois environnements de pratique, des projets concrets et du vrai code à exécuter.">
+ <title>DEV/LAB Campus — Une véritable école du code à construire</title>
+ <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+ <link rel="stylesheet" href="styles.css">
+ <script type="module" src="app.mjs"></script>
+</head>
+<body>
+<a href="#studio" class="skip-link">Aller directement au studio de code</a>
+<header class="site-header">
+ <div class="header-content">
+  <a href="../index.html" class="brand" aria-label="Retour au site DEV/LAB"><span class="brand-icon" aria-hidden="true">⌘</span><span>DEV<span class="acid">/</span>LAB</span><span class="brand-word">CAMPUS</span></a>
+  <nav aria-label="Navigation du campus" class="site-navigation"><a href="#paths">Parcours</a><a href="#studio">Mon studio</a><a href="#project-library">Projets</a></nav>
+  <div class="header-actions"><span class="online-chip"><span class="small-dot"></span> 100% PRATIQUE</span><a href="../academy-v4/index.html" class="older-link">Academy V4 <span aria-hidden="true">↗</span></a></div>
+ </div>
+</header>
+<main>
+<section class="hero" aria-labelledby="hero-title">
+ <div class="hero-inner">
+  <div class="hero-upper"><span><i class="signal" aria-hidden="true"></i> LE LABORATOIRE DU CODE</span><span>FORMATION LIBRE / PROJETS RÉELS / 2026</span></div>
+  <div class="hero-layout">
+   <div class="hero-intro">
+    <p class="eyebrow">APPRENDS EN CONSTRUISANT.</p>
+    <h1 id="hero-title">MOINS DE<br>THÉORIE VIDE.<br><span class="hero-highlight">PLUS DE CODE<span class="period">.</span></span></h1>
+    <p class="hero-lead">Un vrai environnement pour apprendre, écrire, exécuter, corriger et construire. Le C se compile réellement. JavaScript s'exécute dans un espace isolé. HTML/CSS prend vie sous tes yeux.</p>
+    <div class="hero-buttons"><a class="button primary" href="#studio">Entrer dans mon studio <span aria-hidden="true">↗</span></a><a class="button secondary" href="#project-library">Explorer les projets <span aria-hidden="true">↓</span></a></div>
+    <div class="hero-signoff"><div class="line"></div><span>AUCUNE INSCRIPTION · CODE SAUVEGARDÉ DANS TON NAVIGATEUR</span></div>
+   </div>
+   <div class="hero-terminal" aria-label="Illustration de code JavaScript et résultat">
+    <div class="window-header"><div class="three-dots" aria-hidden="true"><span></span><span></span><span></span></div><span>lab / main.js</span><span class="window-marker">● LIVE CODE</span></div>
+    <div class="window-body">
+     <div class="window-code"><span class="ln">01</span><span class="code-kw">function</span> <span class="code-fn">apprendre</span>(idee) {</div>
+     <div class="window-code"><span class="ln">02</span>  <span class="code-kw">const</span> effort = <span class="code-num">100</span>;</div>
+     <div class="window-code"><span class="ln">03</span>  <span class="code-kw">return</span> idee + effort;</div>
+     <div class="window-code"><span class="ln">04</span>}</div>
+     <div class="window-code"><span class="ln">05</span></div>
+     <div class="window-code"><span class="ln">06</span><span class="code-obj">console</span>.log(<span class="code-fn">apprendre</span>(<span class="code-num">1</span>));</div>
+    </div>
+    <div class="window-result"><div><span>↳ TERMINAL / EXEMPLE</span><span>✓ CODE EXÉCUTABLE</span></div><strong>101<span class="blink">_</span></strong><p>Le vrai code est dans ton studio, juste en dessous.</p></div>
+    <div class="window-bottom"><span>LEARN BY DOING</span><span>DEV/LAB // 001</span></div>
+   </div>
+  </div>
+  <div class="hero-footer"><span>LE CURSUS ÉVOLUE AVEC TES PROJETS.</span><span>SCROLL TO BUILD <span aria-hidden="true">↓</span></span></div>
+ </div>
+</section>
+<div class="strip" aria-label="Compétences enseignées"><div class="strip-inner"><span>ÉCRIRE</span><i>✳</i><span>COMPILER</span><i>✳</i><span>TESTER</span><i>✳</i><span>COMPRENDRE</span><i>✳</i><span>CONSTRUIRE</span></div></div>
+<section class="paths-section" id="paths">
+ <div class="content-wrap">
+  <div class="section-lead"><div><span class="eyebrow">01 / LE CURSUS</span><h2>TROIS PORTES D'ENTRÉE.<br><span class="acid">UN SEUL ATELIER.</span></h2></div><p>Choisis un langage, puis apprends à le maîtriser avec des projets. Python arrive plus tard ; nous ne te ferons pas croire qu'il fonctionne déjà.</p></div>
+  <div class="paths" id="track-cards" aria-label="Parcours disponibles">
+   <button type="button" class="path" data-track-select="c"><span class="path-code">01 / COMPILÉ</span><strong class="path-icon">C<span class="accent-glyph">✳</span></strong><h3>Langage C</h3><p>Variables, pointeurs, mémoire et algorithmes. Un vrai compilateur C89/C90 dans le navigateur.</p><span class="path-bottom">4 PROJETS <span aria-hidden="true">↗</span></span></button>
+   <button type="button" class="path" data-track-select="js"><span class="path-code">02 / EXÉCUTÉ</span><strong class="path-icon">JS<span class="accent-glyph">/</span></strong><h3>JavaScript</h3><p>Fonctions, tableaux et logique. Exécute du JavaScript isolé et confronte-le à des tests.</p><span class="path-bottom">4 PROJETS <span aria-hidden="true">↗</span></span></button>
+   <button type="button" class="path" data-track-select="web"><span class="path-code">03 / VISUEL</span><strong class="path-icon">&lt;/&gt;</strong><h3>HTML & CSS</h3><p>Crée de vraies pages, expérimente avec les styles et prévisualise le résultat.</p><span class="path-bottom">4 PROJETS <span aria-hidden="true">↗</span></span></button>
+  </div>
+  <div class="future-note"><span class="future-indicator" aria-hidden="true">⌁</span><p><strong>PYTHON — EN PRÉPARATION.</strong> Pas de faux interpréteur : nous l'intégrerons quand son exécution aura été réellement validée.</p></div>
+ </div>
+</section>
+<section class="studio-section" id="studio" aria-labelledby="studio-title">
+ <div class="content-wrap">
+  <div class="studio-section-head"><div><span class="eyebrow">02 / L'ENVIRONNEMENT</span><h2 id="studio-title">TON STUDIO<span class="acid">.</span></h2><p>Des fichiers, un vrai moteur d'exécution, des tests et un guide pédagogique au même endroit.</p></div><div class="progress-summary"><span class="progress-ring" role="progressbar" id="progress-ring" aria-label="Progression des projets" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0"><strong id="progress-percent">0%</strong></span><div><small>PROGRESSION</small><strong id="progress-label">0 / 12 projets</strong><span>Enregistrée localement</span></div></div></div>
+  <div class="studio-shell">
+   <aside class="studio-sidebar" aria-label="Explorateur de projets et fichiers">
+    <div class="sidebar-heading"><span>EXPLORATEUR</span><span class="indicator-dot" aria-hidden="true"></span></div>
+    <div class="side-tools"><label class="sr-only" for="track-filter">Filtrer les projets par langage</label><select id="track-filter"><option value="all">Tous les parcours</option><option value="c">Langage C</option><option value="js">JavaScript</option><option value="web">HTML / CSS</option></select></div>
+    <nav id="project-navigation" aria-label="Mes missions"></nav>
+    <div class="file-heading"><span>FICHIERS DU PROJET</span><button type="button" id="btn-add-file" title="Créer un fichier" aria-label="Ajouter un fichier">+</button></div>
+    <div id="file-explorer" role="group" aria-label="Fichiers du projet actif"></div>
+    <div class="side-actions"><button type="button" id="btn-new">+ Nouveau projet</button><button type="button" id="btn-import">Importer un projet</button><input type="file" id="import-file" accept="application/json,.json" hidden></div>
+   </aside>
+   <div class="studio-main">
+    <div class="workspace-topbar"><div class="workspace-breadcrumb"><span id="breadcrumb-track">C</span><span>/</span><span id="breadcrumb-project">premier programme</span></div><div class="workspace-right"><span class="live-dot"></span><span id="engine-label">COMPILATEUR RÉEL</span></div></div>
+    <div class="mission">
+     <div class="mission-overline"><span id="mission-tag">MISSION 01 / C</span><span id="mission-time">10 MIN · DÉBUTANT</span></div>
+     <h3 id="mission-title">Ton premier programme.</h3>
+     <p id="mission-description">Apprends à écrire, compiler et tester du vrai code.</p>
+     <div class="mission-brief"><span>TA MISSION</span><p id="mission-objective"></p></div>
+    </div>
+    <section class="ide" aria-labelledby="editor-title">
+     <div class="ide-header"><div class="editor-tab-list" id="editor-tabs" aria-label="Fichiers ouverts"></div><span class="saved" id="save-status">SAUVEGARDE LOCALE</span></div>
+     <div class="editor-toolbar"><h4 id="editor-title">ÉDITEUR / <span id="active-file-name">main.c</span></h4><div><button type="button" id="btn-reset" class="tool-button">Réinitialiser</button><button type="button" id="btn-download" class="tool-button">↓ Fichier</button></div></div>
+     <div class="editor-surface"><pre id="line-numbers" aria-hidden="true">1</pre><label for="code-editor" class="sr-only">Code source du fichier actif</label><textarea id="code-editor" spellcheck="false" autocapitalize="off" autocomplete="off" rows="16" aria-describedby="editor-help"></textarea></div>
+     <div class="editor-runbar"><p id="editor-help">Ctrl + Entrée pour exécuter. Utilise Tab pour indenter.</p><div class="run-buttons"><button type="button" id="btn-stop" class="button stop-button" disabled>■ Stop</button><button type="button" id="btn-run" class="button run-button">▶ Exécuter</button><button type="button" id="btn-test" class="button test-button">✓ Tester</button></div></div>
+    </section>
+    <div class="bottom-panels">
+     <section class="terminal-panel" aria-labelledby="console-heading"><div class="panel-head"><h4 id="console-heading">TERMINAL</h4><span id="runtime-status">PRÊT</span></div><div class="stdin-row" id="stdin-row"><label for="stdin-field">ENTRÉE (STDIN) <span>facultatif</span></label><textarea id="stdin-field" rows="2" placeholder="Texte envoyé au programme C…"></textarea></div><pre id="result-console" aria-live="polite">Ton programme est prêt. Exécute-le pour voir un vrai résultat.</pre></section>
+     <section class="checks-panel" aria-labelledby="checks-title"><div class="panel-head"><h4 id="checks-title">CHECKPOINTS</h4><span id="checks-count">—</span></div><ol id="check-results" aria-live="polite"><li>Les tests du projet s'affichent ici.</li></ol><p id="check-disclaimer">Seul un test réellement réussi valide un exercice C ou JavaScript.</p></section>
+    </div>
+    <section class="preview-panel" id="preview-panel" aria-labelledby="preview-title" hidden><div class="panel-head"><h4 id="preview-title">APERÇU HTML / CSS</h4><span>SANDBOX / SCRIPTS BLOQUÉS</span></div><iframe id="preview-frame" title="Aperçu isolé du projet HTML et CSS" sandbox="" referrerpolicy="no-referrer"></iframe><div class="preview-actions"><button type="button" id="btn-practised" class="button practice-button">Marquer comme pratiqué ✓</button><span>Cette action ne certifie pas la qualité du code.</span></div></section>
+    <iframe id="runner-frame" title="Environnement isolé d'exécution JavaScript" sandbox="allow-scripts" referrerpolicy="no-referrer" hidden></iframe>
+    <div class="workspace-foot"><span id="workspace-notice">Ton travail reste dans ce navigateur.</span><div><button type="button" id="btn-export">Exporter le projet (.json) <span aria-hidden="true">↗</span></button></div></div>
+   </div>
+   <aside class="coach" aria-labelledby="guide-title"><div class="coach-inner"><span class="eyebrow">GUIDE PÉDAGOGIQUE</span><h3 id="guide-title">COMPRENDRE<br><span class="acid">AVANT DE COPIER.</span></h3><p id="guide-concept" class="coach-intro"></p><div class="coach-section"><h4>LA MÉTHODE</h4><ol id="guide-steps"></ol></div><div class="coach-section"><h4>UN INDICE ?</h4><button type="button" class="button hint-button" id="btn-hint">Révéler un indice <span aria-hidden="true">↗</span></button><p id="hint-output" class="hint-output" hidden></p></div><div class="coach-card"><small>À ÉVITER</small><p id="guide-pitfall"></p></div><div class="coach-card success"><small>À SAVOIR APRÈS L'EXERCICE</small><p id="guide-review"></p></div><p class="privacy-note">Aucun compte ni tracking. Ton code reste sur cet appareil, sauf export volontaire.</p></div></aside>
+  </div>
+ </div>
+</section>
+<section class="library-section" id="project-library">
+ <div class="content-wrap">
+  <div class="section-lead"><div><span class="eyebrow">03 / DES PROJETS, PAS DES QCM</span><h2>APPRENDS.<br><span class="acid">CONSTRUIS.</span><br>RECOMMENCE.</h2></div><p>Chaque mission a un objectif, des étapes et un environnement réel. Tu peux modifier les exemples, repartir de zéro ou conserver une copie personnelle.</p></div>
+  <div class="library-filters" role="group" aria-label="Filtrer les projets"><button type="button" data-library-filter="all" aria-pressed="true">Tous</button><button type="button" data-library-filter="c" aria-pressed="false">C</button><button type="button" data-library-filter="js" aria-pressed="false">JavaScript</button><button type="button" data-library-filter="web" aria-pressed="false">HTML & CSS</button></div>
+  <div class="library-grid" id="project-grid"></div>
+ </div>
+</section>
+<section class="manifesto"><div class="content-wrap"><span class="eyebrow">DEV/LAB / MANIFESTE</span><h2>UN BON PROGRAMMEUR NE<br>CONNAÎT PAS TOUT PAR CŒUR.<br><span class="acid">IL SAIT CHERCHER, TESTER ET COMPRENDRE.</span></h2><div class="manifesto-bottom"><p>Ce campus est une fondation évolutive. De nouveaux projets, langages et outils viendront seulement lorsqu'ils seront opérationnels et vérifiés.</p><a class="button secondary" href="#studio">Retour à mon studio <span aria-hidden="true">↑</span></a></div></div></section>
+</main>
+<footer class="footer"><div class="content-wrap footer-inner"><div><strong>DEV<span class="acid">/</span>LAB <span>CAMPUS</span></strong><p>Apprendre à coder avec du vrai code.</p></div><div><a href="../index.html">Portfolio</a><a href="../academy-v4/index.html">Ancienne Academy V4</a><span>Projet indépendant · 2026</span></div></div></footer>
+</body>
+</html>
