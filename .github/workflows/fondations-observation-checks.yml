@@ -1,0 +1,29 @@
+name: Fondations runtime observation checks
+on:
+  push:
+    branches: ['codex/fondations-real-trace-diagnostics-20261120']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: New runtime-trace unit tests
+        run: node --test tests/fondations-real-trace.test.mjs
+      - name: All existing tests
+        run: node --test tests/*.test.mjs
+      - name: Download and verify pinned real C compiler
+        run: |
+          curl -fLsS --retry 3 https://divsmith.github.io/c2wasm/compiler.wasm -o academy-v4/compiler.wasm
+          curl -fLsS --retry 3 https://divsmith.github.io/c2wasm/assembler.wasm -o academy-v4/assembler.wasm
+          printf '%s\n' '5852995d1cb03db58e473b4c16a1d7dd50748feca43b9d335ddcb0e166dbfc49  academy-v4/compiler.wasm' '6fa4c8799d55f7af228050ba56a4a7cd9a5280f97f97622d17c709c9a231a1ef  academy-v4/assembler.wasm' | sha256sum -c -
+      - run: node scripts/verify-fondations-c.mjs
+      - name: Browser end-to-end smoke
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.56.1
+          node scripts/fondations-browser-smoke.mjs
+      - run: node scripts/verify.mjs
