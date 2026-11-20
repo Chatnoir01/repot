@@ -1,7 +1,7 @@
 name: Campus checks
 on:
   push:
-    branches: ['codex/devlab-campus-foundation-20261120']
+    branches: ['codex/devlab-campus-foundation-20261120', 'codex/campus-guided-learning-ux-20261120']
 permissions:
   contents: read
 jobs:
