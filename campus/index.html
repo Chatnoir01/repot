@@ -11,6 +11,7 @@
  <title>DEV/LAB Campus — Une véritable école du code à construire</title>
  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
  <link rel="stylesheet" href="styles.css">
+ <link rel="stylesheet" href="guided.css">
  <script type="module" src="app.mjs"></script>
 </head>
 <body>
@@ -28,11 +29,11 @@
   <div class="hero-upper"><span><i class="signal" aria-hidden="true"></i> LE LABORATOIRE DU CODE</span><span>FORMATION LIBRE / PROJETS RÉELS / 2026</span></div>
   <div class="hero-layout">
    <div class="hero-intro">
-    <p class="eyebrow">APPRENDS EN CONSTRUISANT.</p>
-    <h1 id="hero-title">MOINS DE<br>THÉORIE VIDE.<br><span class="hero-highlight">PLUS DE CODE<span class="period">.</span></span></h1>
-    <p class="hero-lead">Un vrai environnement pour apprendre, écrire, exécuter, corriger et construire. Le C se compile réellement. JavaScript s'exécute dans un espace isolé. HTML/CSS prend vie sous tes yeux.</p>
-    <div class="hero-buttons"><a class="button primary" href="#studio">Entrer dans mon studio <span aria-hidden="true">↗</span></a><a class="button secondary" href="#project-library">Explorer les projets <span aria-hidden="true">↓</span></a></div>
-    <div class="hero-signoff"><div class="line"></div><span>AUCUNE INSCRIPTION · CODE SAUVEGARDÉ DANS TON NAVIGATEUR</span></div>
+    <p class="eyebrow">TON PREMIER PROGRAMME COMMENCE ICI.</p>
+    <h1 id="hero-title">COMPRENDS.<br>ESSAIE.<br><span class="hero-highlight">CRÉE<span class="period">.</span></span></h1>
+    <p class="hero-lead">Tu n'as pas besoin de tout connaître pour commencer. Chaque mission t'explique une idée, te montre du vrai code, puis t'invite à essayer. Tu apprends en construisant, avec des résultats que tu peux vérifier.</p>
+    <div class="hero-buttons"><a class="button primary" href="#studio">Commencer ma première mission <span aria-hidden="true">↗</span></a><a class="button secondary" href="#project-library">Explorer les projets <span aria-hidden="true">↓</span></a></div>
+    <div class="hero-signoff"><div class="line"></div><span>GRATUIT · SANS COMPTE · PROGRESSION SUR TON APPAREIL</span></div>
    </div>
    <div class="hero-terminal" aria-label="Illustration de code JavaScript et résultat">
     <div class="window-header"><div class="three-dots" aria-hidden="true"><span></span><span></span><span></span></div><span>lab / main.js</span><span class="window-marker">● LIVE CODE</span></div>
@@ -51,7 +52,7 @@
   <div class="hero-footer"><span>LE CURSUS ÉVOLUE AVEC TES PROJETS.</span><span>SCROLL TO BUILD <span aria-hidden="true">↓</span></span></div>
  </div>
 </section>
-<div class="strip" aria-label="Compétences enseignées"><div class="strip-inner"><span>ÉCRIRE</span><i>✳</i><span>COMPILER</span><i>✳</i><span>TESTER</span><i>✳</i><span>COMPRENDRE</span><i>✳</i><span>CONSTRUIRE</span></div></div>
+<section class="method-strip" aria-label="Une méthode en trois temps"><div class="content-wrap method-grid"><div><span class="method-number">01</span><strong>COMPRENDRE</strong><p>Une idée expliquée avec des exemples simples.</p></div><div><span class="method-number">02</span><strong>EXPÉRIMENTER</strong><p>Tu modifies du code et observes ce qu’il fait.</p></div><div><span class="method-number">03</span><strong>VÉRIFIER</strong><p>Tu passes de vrais tests et comprends tes erreurs.</p></div></div></section>
 <section class="paths-section" id="paths">
  <div class="content-wrap">
   <div class="section-lead"><div><span class="eyebrow">01 / LE CURSUS</span><h2>TROIS PORTES D'ENTRÉE.<br><span class="acid">UN SEUL ATELIER.</span></h2></div><p>Choisis un langage, puis apprends à le maîtriser avec des projets. Python arrive plus tard ; nous ne te ferons pas croire qu'il fonctionne déjà.</p></div>
@@ -65,7 +66,7 @@
 </section>
 <section class="studio-section" id="studio" aria-labelledby="studio-title">
  <div class="content-wrap">
-  <div class="studio-section-head"><div><span class="eyebrow">02 / L'ENVIRONNEMENT</span><h2 id="studio-title">TON STUDIO<span class="acid">.</span></h2><p>Des fichiers, un vrai moteur d'exécution, des tests et un guide pédagogique au même endroit.</p></div><div class="progress-summary"><span class="progress-ring" role="progressbar" id="progress-ring" aria-label="Progression des projets" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0"><strong id="progress-percent">0%</strong></span><div><small>PROGRESSION</small><strong id="progress-label">0 / 12 projets</strong><span>Enregistrée localement</span></div></div></div>
+  <div class="studio-section-head"><div><span class="eyebrow">02 / TON ESPACE DE PROGRESSION</span><h2 id="studio-title">TON STUDIO<span class="acid">.</span></h2><p>Une mission à la fois. Comprends l'idée, ose modifier le code, puis vérifie ton travail.</p></div><div class="progress-summary"><span class="progress-ring" role="progressbar" id="progress-ring" aria-label="Progression des projets" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0"><strong id="progress-percent">0%</strong></span><div><small>PROGRESSION</small><strong id="progress-label">0 / 12 projets</strong><span>Enregistrée localement</span></div></div></div>
   <div class="studio-shell">
    <aside class="studio-sidebar" aria-label="Explorateur de projets et fichiers">
     <div class="sidebar-heading"><span>EXPLORATEUR</span><span class="indicator-dot" aria-hidden="true"></span></div>
@@ -83,6 +84,39 @@
      <p id="mission-description">Apprends à écrire, compiler et tester du vrai code.</p>
      <div class="mission-brief"><span>TA MISSION</span><p id="mission-objective"></p></div>
     </div>
+    <section class="learning-panel" id="guided-lesson" aria-labelledby="guided-lesson-title">
+     <div class="learning-head">
+      <div><span class="learning-eyebrow">UN COURS, UNE MISSION, DU VRAI CODE</span><h4 id="guided-lesson-title">Avance à ton rythme.</h4></div>
+      <span class="learning-counter" id="learning-step-counter">ÉTAPE 1 / 3</span>
+     </div>
+     <div id="learn-tabs" class="learning-tabs" role="tablist" aria-label="Étapes de la leçon">
+      <button type="button" role="tab" data-learn-step="0" aria-selected="true">01 <span>Comprendre</span></button>
+      <button type="button" role="tab" data-learn-step="1" aria-selected="false">02 <span>Expérimenter</span></button>
+      <button type="button" role="tab" data-learn-step="2" aria-selected="false">03 <span>Vérifier</span></button>
+     </div>
+     <div class="learning-content" role="tabpanel" aria-label="Contenu pédagogique">
+      <div class="learning-main">
+       <div class="learning-phase"><span class="phase-pill" id="learning-phase-tag">L'IDÉE</span><span id="learning-skill">Les fondamentaux</span></div>
+       <h5 id="learning-step-title">Comprends avant de coder.</h5>
+       <p id="learning-explainer" class="learning-intro"></p>
+       <div class="learning-analogy" id="learning-analogy"><span class="analogy-mark" aria-hidden="true">↗</span><p id="learning-analogy-text"></p></div>
+       <div id="walkthrough" class="walkthrough" aria-label="Explication du code ligne par ligne"></div>
+       <div id="lesson-question" class="lesson-question" hidden>
+        <span class="question-eyebrow">QUESTION ÉCLAIR — POUR VÉRIFIER QUE TU AS COMPRIS</span>
+        <p id="question-prompt"></p>
+        <div id="question-choices" class="question-choices" role="group" aria-label="Choisis une réponse"></div>
+        <button type="button" id="lesson-answer" class="quiz-submit" disabled>Vérifier ma réponse <span aria-hidden="true">↗</span></button>
+        <div id="answer-feedback" role="status" aria-live="polite" class="answer-feedback" hidden></div>
+        <p class="quiz-disclaimer">Cette question t'aide à apprendre. Seuls les tests du studio valident une mission de code.</p>
+       </div>
+       <p id="learning-challenge" class="learning-challenge" hidden></p>
+       <div class="learning-footer">
+        <button type="button" id="btn-restart-lesson" class="learn-back">↶ Revoir depuis le début</button>
+        <button type="button" id="btn-next-step" class="learn-next">Passer à l'étape 2 <span aria-hidden="true">→</span></button>
+       </div>
+      </div>
+     </div>
+    </section>
     <section class="ide" aria-labelledby="editor-title">
      <div class="ide-header"><div class="editor-tab-list" id="editor-tabs" aria-label="Fichiers ouverts"></div><span class="saved" id="save-status">SAUVEGARDE LOCALE</span></div>
      <div class="editor-toolbar"><h4 id="editor-title">ÉDITEUR / <span id="active-file-name">main.c</span></h4><div><button type="button" id="btn-reset" class="tool-button">Réinitialiser</button><button type="button" id="btn-download" class="tool-button">↓ Fichier</button></div></div>
@@ -110,6 +144,15 @@
 </section>
 <section class="manifesto"><div class="content-wrap"><span class="eyebrow">DEV/LAB / MANIFESTE</span><h2>UN BON PROGRAMMEUR NE<br>CONNAÎT PAS TOUT PAR CŒUR.<br><span class="acid">IL SAIT CHERCHER, TESTER ET COMPRENDRE.</span></h2><div class="manifesto-bottom"><p>Ce campus est une fondation évolutive. De nouveaux projets, langages et outils viendront seulement lorsqu'ils seront opérationnels et vérifiés.</p><a class="button secondary" href="#studio">Retour à mon studio <span aria-hidden="true">↑</span></a></div></div></section>
 </main>
+<dialog id="milestone-dialog" class="milestone-dialog" aria-labelledby="milestone-title" aria-describedby="milestone-description">
+ <div class="milestone-content"><div class="milestone-top"><span>DEV/LAB / ÉTAPE FRANCHIE</span><button type="button" id="close-milestone" aria-label="Fermer cette fenêtre">×</button></div>
+ <div class="milestone-symbol" aria-hidden="true">✓</div>
+ <h2 id="milestone-title">Mission validée !</h2>
+ <p id="milestone-description">Tu as réussi les tests de ce projet.</p>
+ <div class="milestone-actions"><button type="button" id="next-project" class="milestone-next">Découvrir la mission suivante <span aria-hidden="true">→</span></button><button type="button" id="back-to-code">Retour au studio</button></div>
+ <span class="milestone-honesty">Ta progression reflète les tests réussis ou les ateliers marqués manuellement.</span>
+ </div>
+</dialog>
 <footer class="footer"><div class="content-wrap footer-inner"><div><strong>DEV<span class="acid">/</span>LAB <span>CAMPUS</span></strong><p>Apprendre à coder avec du vrai code.</p></div><div><a href="../index.html">Portfolio</a><a href="../academy-v4/index.html">Ancienne Academy V4</a><span>Projet indépendant · 2026</span></div></div></footer>
 </body>
 </html>
