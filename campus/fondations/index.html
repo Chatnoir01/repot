@@ -58,6 +58,17 @@
      </div>
      <div class="trace-controls"><button type="button" id="trace-previous" aria-label="Étape précédente">← Précédent</button><div id="trace-dots" aria-hidden="true"></div><button type="button" id="trace-next">Suivant →</button></div>
     </section>
+    <section class="real-observation-card" aria-labelledby="actual-trace-title">
+     <div class="card-heading"><div><span class="card-number">OBSERVATION RÉELLE / OPTIONNELLE</span><h3 id="actual-trace-title">Observe tes propres variables.</h3></div><span class="real-label">MESURES DU PROGRAMME</span></div>
+     <p class="observation-intro">Lance ton code dans un deuxième programme C instrumenté. Si les sorties des deux exécutions concordent, tu peux suivre les valeurs réellement calculées, une instruction à la fois.</p>
+     <p id="real-trace-disclaimer" class="trace-warning">Mode limité : observe seulement certaines affectations d'entiers dans main(). Ce n'est pas un débogueur général. Les exemples guidés au-dessus restent distincts des valeurs mesurées.</p>
+     <div id="actual-trace" class="real-trace-panel" hidden>
+      <div class="real-trace-top"><span class="live-indicator" aria-hidden="true"></span><strong id="actual-trace-status">VALEURS MESURÉES</strong><span id="actual-trace-count">1 / 1</span></div>
+      <div id="actual-trace-state" class="real-trace-state" aria-live="polite"></div>
+      <div class="real-trace-actions"><button type="button" id="actual-trace-previous">← Avant</button><button type="button" id="actual-trace-next">Après →</button></div>
+     </div>
+     <p id="actual-trace-message" class="real-trace-message" role="status" aria-live="polite">Clique sur « Observer mon code » près de l'éditeur pour mesurer les valeurs compatibles.</p>
+    </section>
     <section class="predict-card" aria-labelledby="predict-title">
      <div class="card-heading"><div><span class="card-number">03 / PRÉDIRE</span><h3 id="predict-title">Et toi, tu dirais quoi ?</h3></div><span class="brain-icon" aria-hidden="true">?</span></div>
      <p class="predict-lead">Avant de lancer le code, prends quelques secondes pour réfléchir. Se tromper fait partie de l'apprentissage.</p>
@@ -75,11 +86,12 @@
      <div class="code-window">
       <div class="editor-top"><div class="editor-tab"><span class="c-icon">C</span><strong id="code-file">main.c</strong><span class="tab-dot">●</span></div><div class="editor-top-tools"><span>FICHIER SOURCE</span><button type="button" id="download-code" title="Exporter le code en fichier .c">↓ Exporter</button></div></div>
       <div class="editor-inner"><div id="editor-line-numbers" aria-hidden="true">1</div><label for="code-editor" class="sr-only">Éditeur de code C</label><textarea id="code-editor" rows="14" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Code source du programme C"></textarea></div>
-      <div class="editor-footer"><span>CTRL + ENTRÉE POUR EXÉCUTER</span><span id="save-indicator">SAUVEGARDÉ LOCALEMENT</span></div>
+      <div class="editor-footer"><span>CTRL + ENTRÉE POUR EXÉCUTER</span><span id="editor-position" aria-live="off">L1:C1</span><button type="button" id="goto-line" class="goto-line" title="Aller à une ligne">Aller à la ligne</button><span id="save-indicator">SAUVEGARDÉ LOCALEMENT</span></div>
      </div>
      <div class="editor-buttons">
       <button type="button" id="reset-code" class="soft-button">↶ Recommencer</button>
       <button type="button" id="show-hint" class="soft-button">✧ Un indice</button>
+      <button type="button" id="observe-code" class="observe-button">◉ Observer mon code</button>
       <div class="editor-buttons-spacer"></div>
       <button type="button" id="stop-code" class="stop-button" disabled>■ Stop</button>
       <button type="button" id="compile-run" class="run-button">▶ Exécuter</button>
@@ -89,6 +101,12 @@
      <div class="terminal">
       <div class="terminal-heading"><strong>⌁ TERMINAL</strong><span id="runtime-status">PRÊT</span></div>
       <pre id="result-console" aria-live="polite">Ton programme attend ses premières instructions…</pre>
+      <div id="diagnostic-panel" class="diagnostic-panel" hidden role="status" aria-live="polite">
+       <strong id="diagnostic-title">À examiner</strong>
+       <p id="diagnostic-detail"></p>
+       <ol id="diagnostic-checks"></ol>
+       <button id="diagnostic-jump" type="button" hidden>Voir la ligne dans l'éditeur →</button>
+      </div>
      </div>
      <div class="test-area">
       <div class="test-heading"><div><strong>VÉRIFICATION DU CODE</strong><small>Les résultats proviennent du vrai compilateur C</small></div><span id="test-counter">—</span></div>
