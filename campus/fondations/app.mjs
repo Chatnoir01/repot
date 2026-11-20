@@ -136,6 +136,8 @@ function resetDiagnostic(){
  $("diagnostic-panel").hidden=true;
  $("diagnostic-jump").hidden=true;
  $("diagnostic-checks").replaceChildren();
+ write("diagnostic-title","");
+ write("diagnostic-detail","");
 }
 function showDiagnostic(diagnostic){
  if(!diagnostic)return;
@@ -271,6 +273,8 @@ function startRun(mode="run"){
  if(source.length>12000){write("result-console","Limite de 12 000 caractères atteinte.");return;}
  storeCode();
  resetDiagnostic();
+ write("test-counter","—");
+ $("test-explanation").hidden=true;$("test-explanation").textContent="";
  const allCases=makeCases(lesson,source);
  const cases=mode==="test"?allCases:[allCases[0]];
  const id=++runNumber;
