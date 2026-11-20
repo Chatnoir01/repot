@@ -4,8 +4,8 @@ import {fileURLToPath} from "node:url";
 import vm from "node:vm";
 import {lessons,casesFor} from "../academy-v4/curriculum.mjs";
 const root=resolve(dirname(fileURLToPath(import.meta.url)),"..");
-const wasm1=readFileSync(resolve(root,"academy/compiler.wasm"));
-const wasm2=readFileSync(resolve(root,"academy/assembler.wasm"));
+const wasm1=readFileSync(resolve(root,"academy-v4/compiler.wasm"));
+const wasm2=readFileSync(resolve(root,"academy-v4/assembler.wasm"));
 function checkWasm(b,name){
  if(b.length<10000||b.subarray(0,4).toString("hex")!=="0061736d")throw new Error(name+" invalid or incomplete");
  console.log(name+": "+b.length+" bytes, valid wasm header");
