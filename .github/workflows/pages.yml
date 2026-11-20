@@ -37,6 +37,8 @@ jobs:
           printf '%s\n' '5852995d1cb03db58e473b4c16a1d7dd50748feca43b9d335ddcb0e166dbfc49  academy-v4/compiler.wasm' '6fa4c8799d55f7af228050ba56a4a7cd9a5280f97f97622d17c709c9a231a1ef  academy-v4/assembler.wasm' | sha256sum -c -
       - name: Verify Academy V4 C compilation
         run: node scripts/verify-v4-c-compiler.mjs
+      - name: Verify all 18 Fondations C lessons by actual compilation
+        run: node scripts/verify-fondations-c.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
