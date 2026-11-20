@@ -27,7 +27,7 @@ jobs:
         run: |
           curl -fLsS --retry 3 https://divsmith.github.io/c2wasm/compiler.wasm -o academy/compiler.wasm
           curl -fLsS --retry 3 https://divsmith.github.io/c2wasm/assembler.wasm -o academy/assembler.wasm
-          sha256sum academy/compiler.wasm academy/assembler.wasm
+          printf '%s\n' '5852995d1cb03db58e473b4c16a1d7dd50748feca43b9d335ddcb0e166dbfc49  academy/compiler.wasm' '6fa4c8799d55f7af228050ba56a4a7cd9a5280f97f97622d17c709c9a231a1ef  academy/assembler.wasm' | sha256sum -c -
       - name: Verify actual C programs compile and execute
         run: node scripts/verify-actual-c-compiler.mjs
       - uses: actions/configure-pages@v5
