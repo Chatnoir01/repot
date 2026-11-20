@@ -844,8 +844,8 @@ export const lessons=[
       "correct": 1,
       "explanation": "L'opérateur && ne renvoie vrai que si les deux conditions sont vraies. Une rupture de stock rend l'achat impossible."
     },
-    "starter": "#include <stdio.h>\n\nint main(void) {\n    int budget = 30, prix = 20, stock = 0;\n    if (budget >= prix) {\n        printf(\"Accepte\\n\");\n    } else {\n        printf(\"Refuse\\n\");\n    }\n    return 0;\n}\n",
-    "solution": "#include <stdio.h>\n\nint main(void) {\n    int budget = 30, prix = 20, stock = 0;\n    if (budget >= prix && stock > 0) {\n        printf(\"Accepte\\n\");\n    } else {\n        printf(\"Refuse\\n\");\n    }\n    return 0;\n}\n",
+    "starter": "#include <stdio.h>\n\nint main(void) {\n    int budget = 30;\n    int prix = 20;\n    int stock = 0;\n    if (budget >= prix) {\n        printf(\"Accepte\\n\");\n    } else {\n        printf(\"Refuse\\n\");\n    }\n    return 0;\n}\n",
+    "solution": "#include <stdio.h>\n\nint main(void) {\n    int budget = 30;\n    int prix = 20;\n    int stock = 0;\n    if (budget >= prix && stock > 0) {\n        printf(\"Accepte\\n\");\n    } else {\n        printf(\"Refuse\\n\");\n    }\n    return 0;\n}\n",
     "tests": [
       {
         "label": "Rupture de stock",
