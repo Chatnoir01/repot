@@ -13,6 +13,14 @@
 
 12 projets guidés (4 par parcours) et des projets personnels. Les projets peuvent contenir plusieurs fichiers. **Seul le fichier d'entrée est exécuté en C et JS** : le compilateur actuel ne lie pas plusieurs fichiers C, et le moteur JS ne résout pas les imports de modules du projet. Pour HTML/CSS, les fichiers \`index.html\` et \`style.css\` sont combinés dans l'aperçu.
 
+## Apprentissage guidé
+
+Chaque projet du catalogue possède un contenu original dans `campus/learning.mjs` : mise en situation concrète, comparaison imagée, explication de plusieurs lignes de code, trois étapes (« Comprendre », « Expérimenter », « Vérifier »), question courte avec justification et défi facultatif pour prolonger l'exercice.
+
+Le questionnaire de compréhension est **pédagogique** : il n'accorde aucune validation automatique de projet. Les missions C et JavaScript sont validées uniquement par leurs vrais tests ; HTML/CSS repose sur une validation manuelle explicitement nommée. Une petite fenêtre de réussite apparaît lors de la première validation et suggère une mission suivante, sans inventer de certification.
+
+Le style additionnel de ces séquences est regroupé dans `campus/guided.css` pour ne pas désorganiser les styles de l'IDE existant. Les tests Playwright couvrent désormais les trois étapes, les réponses incorrectes et correctes, les événements de validation, ainsi que la navigation mobile à 390 px sans débordement horizontal.
+
 ## Architecture
 
 - \`catalog.mjs\` : déclarations de projets, cours, épreuves, compétences et contenus pédagogiques originaux.
