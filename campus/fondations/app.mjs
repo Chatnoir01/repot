@@ -1,4 +1,6 @@
 import {lessons,modules,answerPrediction,traceFrame,makeCases} from "./curriculum.mjs";
+import {instrumentCase,extractExecutionTrace,sameExecutionOutput} from "./live-trace.mjs";
+import {explainCompilationFailure,explainTestFailure} from "./coaching.mjs";
 const $=id=>document.getElementById(id);
 const write=(id,value)=>{$(id).textContent=String(value);};
 const element=(tag,className,text)=>{
@@ -23,6 +25,7 @@ function loadProgress(){
 }
 const state=loadProgress();
 let index=0,traceIndex=0,selectedPrediction=null,activeWorker=null,timeout=null,runNumber=0,isRunning=false,hintClicks=0;
+let actualTrace=[],actualTraceIndex=0,observingAbort=null,diagnosticLine=null;
 const current=()=>lessons[index];
 function save(){
  const ok=(()=>{try{localStorage.setItem(KEY,JSON.stringify(state));return true;}catch{return false;}})();
@@ -41,7 +44,25 @@ function setCode(value){
 function refreshLineNumbers(){
  const n=Math.max(14,code().split("\n").length);
  $("editor-line-numbers").textContent=Array.from({length:n},(_,i)=>i+1).join("\n");
+ updateCursorPosition();
 }
+function updateCursorPosition(){
+ const input=$("code-editor");if(!input)return;
+ const before=input.value.slice(0,input.selectionStart||0);
+ const lines=before.split("\n");
+ write("editor-position","L"+lines.length+":C"+(lines.at(-1).length+1));
+}
+function gotoEditorLine(line){
+ if(!Number.isInteger(line)||line<1)return;
+ const input=$("code-editor"),lines=input.value.split("\n");
+ if(line>lines.length)return;
+ let position=0;
+ for(let n=0;n<line-1;n++)position+=lines[n].length+1;
+ input.focus();input.setSelectionRange(position,position+lines[line-1].length);
+ updateCursorPosition();
+ input.scrollIntoView({block:"center",behavior:"auto"});
+}
+
 function progress(){
  const n=state.done.filter(x=>validIds.has(x)).length;
  write("lesson-progress",n+" / "+lessons.length);
@@ -87,6 +108,49 @@ function showTrace(){
   const dot=element("span",i===traceIndex?"dot active":"dot");
   dots.append(dot);
  }
+}
+function resetMeasuredTrace(){
+ actualTrace=[];actualTraceIndex=0;
+ $("actual-trace").hidden=true;
+ write("actual-trace-status","EN ATTENTE D'UNE MESURE");
+ write("actual-trace-message","Clique sur « Observer mon code » pour mesurer les valeurs d'affectations entières compatibles.");
+}
+function showMeasuredTrace(){
+ if(!actualTrace.length){resetMeasuredTrace();return;}
+ actualTraceIndex=Math.max(0,Math.min(actualTraceIndex,actualTrace.length-1));
+ const frame=actualTrace[actualTraceIndex];
+ $("actual-trace").hidden=false;
+ write("actual-trace-status","MESURÉ PAR LE VRAI PROGRAMME C");
+ write("actual-trace-count",(actualTraceIndex+1)+" / "+actualTrace.length);
+ const display=$("actual-trace-state");display.replaceChildren();
+ const value=element("div","real-observed-line");
+ value.append(element("span","",frame.name+"  /  entier (int)"),element("strong","",String(frame.value)));
+ const origin=element("div","real-trace-instruction","Valeur observée après la ligne "+frame.line+" du code original.");
+ display.append(value,origin);
+ $("actual-trace-previous").disabled=actualTraceIndex===0;
+ $("actual-trace-next").disabled=actualTraceIndex>=actualTrace.length-1;
+ write("actual-trace-message","Trace vérifiée : la sortie normale est identique à celle du programme instrumenté, une fois les sondes retirées.");
+}
+function resetDiagnostic(){
+ diagnosticLine=null;
+ $("diagnostic-panel").hidden=true;
+ $("diagnostic-jump").hidden=true;
+ $("diagnostic-checks").replaceChildren();
+ write("diagnostic-title","");
+ write("diagnostic-detail","");
+}
+function showDiagnostic(diagnostic){
+ if(!diagnostic)return;
+ const box=$("diagnostic-panel");
+ box.hidden=false;
+ write("diagnostic-title",diagnostic.title||"Vérifie ton programme");
+ write("diagnostic-detail",diagnostic.explanation||"Consulte le message exact du compilateur.");
+ const list=$("diagnostic-checks");list.replaceChildren();
+ for(const check of diagnostic.checks||[])list.append(element("li","",check));
+ if(diagnostic.advice)list.append(element("li","", "Piste de la mission : "+diagnostic.advice));
+ diagnosticLine=Number.isSafeInteger(diagnostic.line)?diagnostic.line:null;
+ $("diagnostic-jump").hidden=diagnosticLine===null||diagnosticLine>code().split("\n").length;
+ $("diagnostic-jump").textContent=diagnosticLine===null?"Voir le code":"Voir la ligne "+diagnosticLine+" dans l'éditeur →";
 }
 function showPrediction(){
  const lesson=current(),container=$("prediction-options");
@@ -136,6 +200,7 @@ function renderLesson(){
  setCode(typeof state.code[lesson.id]==="string"?state.code[lesson.id]:lesson.starter);
  hintClicks=0;$("hint-content").hidden=true;
  traceIndex=0;selectedPrediction=null;showTrace();showPrediction();showSteps();
+ resetMeasuredTrace();resetDiagnostic();
  write("runtime-status","PRÊT");
  write("result-console","Le code de la mission attend que tu l'exécutes…");
  write("test-counter","—");
@@ -157,8 +222,9 @@ function cancelRun(){
  ++runNumber;
  if(timeout){clearTimeout(timeout);timeout=null;}
  if(activeWorker){activeWorker.terminate();activeWorker=null;}
+ if(observingAbort){const abort=observingAbort;observingAbort=null;abort();}
  isRunning=false;
- $("compile-run").disabled=false;$("validate-code").disabled=false;$("stop-code").disabled=true;
+ $("compile-run").disabled=false;$("validate-code").disabled=false;$("observe-code").disabled=false;$("stop-code").disabled=true;
 }
 function showTestResults(rows,tests){
  const list=$("test-cases");list.replaceChildren();
@@ -206,6 +272,9 @@ function startRun(mode="run"){
  if(!source.trim()){write("result-console","Écris d'abord ton programme C.");return;}
  if(source.length>12000){write("result-console","Limite de 12 000 caractères atteinte.");return;}
  storeCode();
+ resetDiagnostic();
+ write("test-counter","—");
+ $("test-explanation").hidden=true;$("test-explanation").textContent="";
  const allCases=makeCases(lesson,source);
  const cases=mode==="test"?allCases:[allCases[0]];
  const id=++runNumber;
@@ -213,7 +282,7 @@ function startRun(mode="run"){
  try{worker=new Worker("../../academy-v4/compile-worker.js");}
  catch(error){write("result-console","Le compilateur est indisponible : "+error.message);return;}
  activeWorker=worker;isRunning=true;
- $("compile-run").disabled=true;$("validate-code").disabled=true;$("stop-code").disabled=false;
+ $("compile-run").disabled=true;$("validate-code").disabled=true;$("observe-code").disabled=true;$("stop-code").disabled=false;
  write("runtime-status",mode==="test"?"VÉRIFICATION…":"COMPILATION…");
  write("result-console","Le vrai compilateur C analyse et exécute ton programme…");
  if(mode==="test")$("test-cases").replaceChildren(element("li","","Les cas de test sont en cours…"));
@@ -234,6 +303,7 @@ function startRun(mode="run"){
    cancelRun();
    write("runtime-status","ERREUR TECHNIQUE");
    write("result-console",result.message||"Erreur du compilateur.");
+   showDiagnostic(explainCompilationFailure(result.message||"Erreur inconnue du compilateur."));
    $("test-explanation").hidden=false;
    write("test-explanation","Le moteur d'exécution a échoué. Aucun résultat n'est simulé.");
    return;
@@ -248,6 +318,17 @@ function startRun(mode="run"){
   if(mode==="test"){
    const validated=showTestResults(rows,allCases);
    const message=validated?"Bravo ! Tous les cas demandés ont été vérifiés.":explainFailure(error?.stderr,!!error&&error.phase==="compile");
+   if(!validated){
+    if(error){showDiagnostic(explainCompilationFailure(error.stderr));}
+    else {
+     const failedIndex=allCases.findIndex((tc,i)=>{
+      const row=rows[i];return !row?.ok||row.exitCode!==0||String(row.stdout||"").replace(/\r\n?/g,"\n").trim()!==String(tc.expected).replace(/\r\n?/g,"\n").trim();
+     });
+     if(failedIndex>=0){const tc=allCases[failedIndex],row=rows[failedIndex];
+      showDiagnostic(explainTestFailure(lesson,{name:tc.name,expected:tc.expected,actual:row?.stdout||""}));
+     }
+    }
+   }
    $("test-explanation").hidden=false;write("test-explanation",message);
    $("test-explanation").classList.toggle("success",validated);
    if(validated&&!state.done.includes(lesson.id)){
@@ -256,7 +337,7 @@ function startRun(mode="run"){
   }else{
    $("test-cases").replaceChildren(element("li","","Exécution libre terminée. Tu peux maintenant vérifier ton code sur tous les cas."));
    write("test-counter","—");
-   if(error){$("test-explanation").hidden=false;write("test-explanation",explainFailure(error.stderr,error.phase==="compile"));}
+   if(error){$("test-explanation").hidden=false;write("test-explanation",explainFailure(error.stderr,error.phase==="compile"));showDiagnostic(explainCompilationFailure(error.stderr));}
   }
  };
  worker.onerror=error=>{
@@ -266,6 +347,96 @@ function startRun(mode="run"){
   write("result-console","Impossible de lancer le compilateur C : "+(error.message||"ressources manquantes."));
  };
  worker.postMessage({requestId:id,cases});
+}
+function compileObservationOnce(oneCase,id,deadlineMs=12000){
+ return new Promise(resolve=>{
+  if(id!==runNumber){resolve({ok:false,error:"Exécution interrompue."});return;}
+  let worker;
+  try{worker=new Worker("../../academy-v4/compile-worker.js");}
+  catch(error){resolve({ok:false,error:"Compilateur inaccessible : "+String(error?.message||error)});return;}
+  activeWorker=worker;
+  let finished=false;
+  const abort=()=>finish({ok:false,error:"Exécution interrompue."});
+  const finish=result=>{
+   if(finished)return;finished=true;
+   if(timeout!==null){clearTimeout(timeout);timeout=null;}
+   if(activeWorker===worker)activeWorker=null;
+   if(observingAbort===abort)observingAbort=null;
+   worker.terminate();
+   resolve(result);
+  };
+  observingAbort=abort;
+  timeout=setTimeout(()=>finish({ok:false,error:"Limite de temps atteinte pour l'observation."}),deadlineMs);
+  worker.onmessage=event=>{
+   const data=event.data||{};
+   if(data.requestId!==id)return;
+   if(data.kind==="done")finish({ok:true,rows:data.results||[]});
+   else if(data.kind==="error")finish({ok:false,error:String(data.message||"Erreur du compilateur.")});
+  };
+  worker.onerror=event=>finish({ok:false,error:String(event.message||"Le compilateur a échoué.")});
+  try{worker.postMessage({requestId:id,cases:[oneCase]});}
+  catch(error){finish({ok:false,error:String(error.message||error)});}
+ });
+}
+async function runRealTrace(){
+ if(isRunning)return;
+ const source=code();
+ if(!source.trim()||source.length>11200){
+  write("actual-trace-message","Observation non disponible : le fichier est vide ou trop volumineux.");
+  return;
+ }
+ storeCode();resetDiagnostic();resetMeasuredTrace();
+ const base=makeCases(current(),source)[0];
+ const random=crypto.getRandomValues(new Uint8Array(9));
+ const token=Array.from(random,v=>v.toString(16).padStart(2,"0")).join("");
+ const instrumented=instrumentCase(base.source,token);
+ if(!instrumented){
+  write("actual-trace-message","Ce programme n'a pas d'affectation entière simple observable dans main(). Ce mode ne sait pas encore suivre les fonctions complexes ou tous les types du C.");
+  return;
+ }
+ const id=++runNumber;
+ isRunning=true;
+ $("compile-run").disabled=true;$("validate-code").disabled=true;$("observe-code").disabled=true;$("stop-code").disabled=false;
+ try{
+  write("runtime-status","OBSERVATION / 1 SUR 2");
+  write("actual-trace-message","1/2 : exécution du code original avec le véritable compilateur C…");
+  const normal=await compileObservationOnce(base,id,16000);
+  if(id!==runNumber)return;
+  const first=normal.rows?.[0];
+  if(!normal.ok||!first?.ok||first.exitCode!==0){
+   const reason=normal.error||first?.stderr||"Le code original ne peut pas être exécuté.";
+   write("actual-trace-message","Aucune trace présentée : "+reason.slice(0,330));
+   if(first?.phase==="compile")showDiagnostic(explainCompilationFailure(reason));
+   return;
+  }
+  write("runtime-status","OBSERVATION / 2 SUR 2");
+  write("actual-trace-message","2/2 : seconde compilation instrumentée, puis vérification des sorties…");
+  const monitored=await compileObservationOnce({name:"Observation mesurée",source:instrumented.source,stdin:base.stdin,expected:base.expected},id,16000);
+  if(id!==runNumber)return;
+  const second=monitored.rows?.[0];
+  if(!monitored.ok||!second?.ok||second.exitCode!==0){
+   write("actual-trace-message","Aucune valeur affichée : le programme instrumenté n'a pas pu être exécuté. Ce mode reste limité au C compatible.");
+   return;
+  }
+  const extracted=extractExecutionTrace(second.stdout,token);
+  const validPoint=new Set(instrumented.points.map(point=>point.line+":"+point.name));
+  const verified=extracted.frames.length>0&&extracted.frames.length<=96
+   &&extracted.frames.every(frame=>validPoint.has(frame.line+":"+frame.name))
+   &&sameExecutionOutput(first.stdout,extracted.cleanOutput);
+  if(!verified){
+   write("actual-trace-message","Trace non confirmée : les sorties des deux exécutions ne concordent pas, ou aucune variable n'a été mesurée. Aucune valeur n'est affichée.");
+   return;
+  }
+  actualTrace=extracted.frames;
+  actualTraceIndex=0;
+  showMeasuredTrace();
+  write("runtime-status","OBSERVATION VÉRIFIÉE");
+  write("result-console",first.stdout||"(aucune sortie)");
+ }catch(error){
+  if(id===runNumber)write("actual-trace-message","Impossible de mesurer les variables : "+String(error?.message||error).slice(0,260));
+ }finally{
+  if(id===runNumber)cancelRun();
+ }
 }
 function downloadCode(){
  storeCode();
@@ -284,6 +455,16 @@ $("check-prediction").addEventListener("click",()=>{
  const node=$("prediction-feedback");node.hidden=false;
  node.classList.toggle("incorrect",!feedback.correct);
  node.textContent=(feedback.correct?"✓ Bien vu ! ":"Pas tout à fait. ")+feedback.explanation;
+});
+$("observe-code").addEventListener("click",runRealTrace);
+$("actual-trace-previous").addEventListener("click",()=>{actualTraceIndex=Math.max(0,actualTraceIndex-1);showMeasuredTrace();});
+$("actual-trace-next").addEventListener("click",()=>{actualTraceIndex=Math.min(actualTrace.length-1,actualTraceIndex+1);showMeasuredTrace();});
+$("diagnostic-jump").addEventListener("click",()=>gotoEditorLine(diagnosticLine));
+$("goto-line").addEventListener("click",()=>{
+ const value=window.prompt("Numéro de la ligne à ouvrir :",String(code().slice(0,$("code-editor").selectionStart).split("\n").length));
+ if(value===null)return;
+ const line=Number(value);
+ if(Number.isSafeInteger(line))gotoEditorLine(line);
 });
 $("compile-run").addEventListener("click",()=>startRun("run"));
 $("validate-code").addEventListener("click",()=>startRun("test"));
@@ -305,9 +486,27 @@ $("resume-button").addEventListener("click",()=>selectLesson(index+1,true));
 $("close-completion").addEventListener("click",closeCompletion);
 $("stay-lesson").addEventListener("click",closeCompletion);
 $("continue-lesson").addEventListener("click",()=>{closeCompletion();selectLesson(index+1,true);});
-$("code-editor").addEventListener("input",()=>{refreshLineNumbers();storeCode();});
+$("code-editor").addEventListener("input",()=>{refreshLineNumbers();storeCode();resetMeasuredTrace();});
+$("code-editor").addEventListener("click",updateCursorPosition);
+$("code-editor").addEventListener("keyup",updateCursorPosition);
 $("code-editor").addEventListener("scroll",()=>{$("editor-line-numbers").scrollTop=$("code-editor").scrollTop;});
 $("code-editor").addEventListener("keydown",event=>{
+ const input=$("code-editor");
+ if(!event.ctrlKey&&!event.metaKey&&!event.altKey&&!event.isComposing){
+  const pairs={"(":")","[":"]","{":"}","\"":"\"","'":"'"};
+  if(Object.hasOwn(pairs,event.key)&&input.selectionStart===input.selectionEnd){
+   const start=input.selectionStart,next=input.value[start]||"";
+   if(next===""||/\s/.test(next)){
+    event.preventDefault();
+    input.setRangeText(event.key+pairs[event.key],start,start,"end");
+    input.setSelectionRange(start+1,start+1);
+    input.dispatchEvent(new Event("input",{bubbles:true}));return;
+   }
+  }
+  if([")","]","}","\"","'"].includes(event.key)&&input.value[input.selectionStart]===event.key&&input.selectionStart===input.selectionEnd){
+   event.preventDefault();const next=input.selectionStart+1;input.setSelectionRange(next,next);updateCursorPosition();return;
+  }
+ }
  if(event.key==="Tab"){
   event.preventDefault();
   const input=$("code-editor"),start=input.selectionStart,end=input.selectionEnd;

@@ -1,0 +1,35 @@
+/* Additional measured-observation and pedagogical diagnostics. */
+.real-observation-card{border:1px solid #a6d7b8;background:linear-gradient(145deg,#f3fff7,#f8fbfb);border-radius:15px;box-shadow:var(--shadow);padding:23px 25px}
+.real-observation-card .card-heading h3{font-size:1.48rem}
+.real-label{background:#d3f7e1;color:#246346;font-size:.59rem;font-weight:950;letter-spacing:.08em;border-radius:7px;padding:6px 9px;white-space:nowrap}
+.observation-intro{color:#44665b;line-height:1.83;font-size:.85rem;margin:0 0 12px}
+.real-observation-card .trace-warning{margin-bottom:15px}
+.real-trace-panel{border:1px solid #3c715d;border-radius:10px;overflow:hidden;background:#142e29;color:#e8ffe8}
+.real-trace-top{background:#1e4037;color:#c7f1d6;border-bottom:1px solid #416b5c;display:flex;gap:9px;align-items:center;padding:12px 14px;font-size:.61rem;letter-spacing:.065em}
+.real-trace-top strong{flex:1}.real-trace-top span:last-child{color:#b9ff94;font-weight:950}
+.real-trace-state{padding:18px;display:grid;gap:9px}
+.real-observed-line{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.real-observed-line span{color:#b2d9ce;font-size:.78rem}
+.real-observed-line strong{font:900 1.5rem ui-monospace,Consolas,monospace;color:#d0ff9c}
+.real-trace-instruction{font-size:.75rem;color:#a9cdc3;border-top:1px solid #375c51;padding-top:9px}
+.real-trace-actions{display:flex;justify-content:space-between;gap:12px;padding:12px 15px;border-top:1px solid #365c4e}
+.real-trace-actions button{border:1px solid #63887b;background:#244c3d;border-radius:6px;padding:8px 14px;color:#dcf7d9;font-size:.72rem;font-weight:900}
+.real-trace-actions button:hover{background:#34674d}
+.real-trace-actions button:disabled{opacity:.4}
+.real-trace-message{margin:12px 0 0;color:#3e7455;font-size:.78rem;line-height:1.65}
+.observe-button{border:1px solid #3d9b75;background:#ecfaf0;color:#23664b}
+.observe-button:hover{background:#d4f2de}
+.observe-button:disabled{opacity:.42}
+.editor-footer{flex-wrap:wrap}
+#editor-position{color:#c8ebd9;background:#26443e;border-radius:4px;padding:3px 8px;font:800 .65rem ui-monospace,Consolas,monospace}
+.goto-line{color:#c9eadd;background:transparent;border:0;font-size:.62rem;font-weight:800;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:4px}
+.goto-line:hover{color:white}
+.diagnostic-panel{background:#fdf6e7;border-top:1px solid #dab785;color:#654e26;padding:15px 17px}
+.diagnostic-panel strong{font-size:.89rem;color:#80511d;letter-spacing:-.025em}
+.diagnostic-panel p{font-size:.78rem;line-height:1.7;margin:6px 0 8px}
+.diagnostic-panel ol{padding-left:18px;margin:6px 0 9px;color:#6d603e;font-size:.75rem;line-height:1.8}
+.diagnostic-panel button{background:#f3e2bb;border:1px solid #d4ac68;color:#785219;border-radius:6px;font-size:.71rem;padding:8px 11px;font-weight:900}
+.diagnostic-panel button:hover{background:#e9d199}
+@media(max-width:760px){.real-observation-card{padding:20px}}
+@media(max-width:480px){.real-observation-card{padding:16px 14px;border-radius:11px}.real-label{font-size:.49rem;white-space:normal}.real-observation-card .card-heading h3{font-size:1.33rem}.editor-buttons{grid-template-columns:1fr 1fr}.observe-button{grid-column:1/-1}.editor-footer{justify-content:space-around}.goto-line{font-size:.58rem}}
+@media(prefers-reduced-motion:reduce){.real-trace-actions button{transition:none}}
