@@ -17,7 +17,7 @@ async function expectText(page,id,expected,ms=20000){
 }
 try{
  await ready();
- browser=await chromium.launch({headless:true,args:["--no-sandbox"]});
+ browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_BIN||"/usr/bin/google-chrome",args:["--no-sandbox"]});
  const page=await browser.newPage({viewport:{width:1366,height:900},acceptDownloads:true});
  page.on("pageerror",e=>failures.push("Browser JS error: "+e.message));
  const response=await page.goto(base,{waitUntil:"load"});
